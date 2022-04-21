@@ -1,0 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+using System;
+
+public class WiresScript : MonoBehaviour
+{
+    private bool running = false;
+
+    private double timer = 0;
+
+    public TextMeshPro uiText;
+
+    void Update()
+    {
+        if(running == true)
+        {
+            timer += Time.deltaTime;
+        }
+        else
+        {
+            //print(timer);
+            double toPrint = Math.Round((timer * 10), 4);
+            uiText.text = toPrint.ToString("0.000");
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        print("collide");
+        running = true;
+        timer = 0;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        print("");
+        running = false;
+    }
+}
