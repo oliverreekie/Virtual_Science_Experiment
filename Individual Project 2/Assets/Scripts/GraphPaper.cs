@@ -60,7 +60,7 @@ public class GraphPaper : Graphic
             numbers = 15;
         }
 
-        print(numbers);
+        //print(numbers);
     }
 
     protected override void OnPopulateMesh(VertexHelper vh)
