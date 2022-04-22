@@ -27,6 +27,12 @@ public class BuildState : MonoBehaviour
 
     private bool graphCanvasOpen = false;
 
+    private bool equationCanvasOpen = false;
+
+    private bool welcomeCanvasOpen = true;
+
+    private bool HUDCanvasOpen = true;
+
     public TextMeshProUGUI currentGoalLabel;
 
     private void Awake()
@@ -120,5 +126,35 @@ public class BuildState : MonoBehaviour
     public bool getGraphCanvasOpen()
     {
         return graphCanvasOpen;
+    }
+
+    public void setEquationCanvasOpen(bool b)
+    {
+        equationCanvasOpen = b;
+    }
+
+    public bool getEquationCanvasOpen()
+    {
+        return equationCanvasOpen;
+    }
+
+    public void setWelcomeCanvasOpen(bool b)
+    {
+       welcomeCanvasOpen = b;
+    }
+
+    public bool getWelcomeCanvasOpen()
+    {
+        return welcomeCanvasOpen;
+    }
+
+    public void setHUDCanvasOpen(bool b)
+    {
+        HUDCanvasOpen = b;
+    }
+
+    public bool getHUDCanvasOpen()
+    {
+        return HUDCanvasOpen;
     }
 }

@@ -20,6 +20,18 @@ public class CanvasController : MonoBehaviour
 
     private bool graphActive;
 
+    public GameObject equationCanvas;
+
+    private bool equationActive;
+
+    public GameObject welcomeCanvas;
+
+    private bool welcomeActive;
+
+    public GameObject HUDCanvas;
+
+    private bool HUDActive;
+
     void Start()
     {
         rulerCanvas.SetActive(false);
@@ -33,6 +45,15 @@ public class CanvasController : MonoBehaviour
 
         graphCanvas.SetActive(false);
         graphActive = false;
+
+        equationCanvas.SetActive(false);
+        equationActive = false;
+
+        welcomeCanvas.SetActive(true);
+        welcomeActive = true;
+
+        HUDCanvas.SetActive(false);
+        HUDActive = false;
     }
 
     private void Update()
@@ -44,6 +65,14 @@ public class CanvasController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.G))
         {
             swapGraphState();
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            swapEquationState();
+        }
+        else if (Input.GetKeyDown(KeyCode.P))
+        {
+            swapWelcomeState();
         }
     }
 
@@ -109,6 +138,54 @@ public class CanvasController : MonoBehaviour
         }
     }
 
+    public void swapEquationState()
+    {
+        if (equationActive == false)
+        {
+            equationCanvas.SetActive(true);
+            equationActive = true;
+            BuildState.Instance.setEquationCanvasOpen(true);
+        }
+        else
+        {
+            equationCanvas.SetActive(false);
+            equationActive = false;
+            BuildState.Instance.setEquationCanvasOpen(false);
+        }
+    }
+
+    public void swapWelcomeState()
+    {
+        if (welcomeActive == false)
+        {
+            welcomeCanvas.SetActive(true);
+            welcomeActive = true;
+            BuildState.Instance.setWelcomeCanvasOpen(true);
+        }
+        else
+        {
+            welcomeCanvas.SetActive(false);
+            welcomeActive = false;
+            BuildState.Instance.setWelcomeCanvasOpen(false);
+        }
+    }
+
+    public void swapHUDState()
+    {
+        if (HUDActive == false)
+        {
+            HUDCanvas.SetActive(true);
+            HUDActive = true;
+            BuildState.Instance.setHUDCanvasOpen(true);
+        }
+        else
+        {
+            HUDCanvas.SetActive(false);
+            HUDActive = false;
+            BuildState.Instance.setHUDCanvasOpen(false);
+        }
+    }
+
     public bool getRulerActive()
     {
         return rulerActive;
@@ -124,5 +201,17 @@ public class CanvasController : MonoBehaviour
     public bool getGraphActive()
     {
         return graphActive;
+    }
+    public bool getEquationActive()
+    {
+        return equationActive;
+    }
+    public bool getWelcomeActive()
+    {
+        return welcomeActive;
+    }
+    public bool getHUDActive()
+    {
+        return HUDActive;
     }
 }

@@ -14,7 +14,7 @@ public class MouseMovement : MonoBehaviour
 
     void Update()
     {
-        if (rulerController.getRulerActive() == false && rulerController.getTableActive() == false && rulerController.getGraphActive() == false)
+        if (rulerController.getRulerActive() == false && rulerController.getTableActive() == false && rulerController.getGraphActive() == false && rulerController.getEquationActive() == false && rulerController.getWelcomeActive() == false)
         {
             float mouseX = Input.GetAxis("Mouse X") * 100f * Time.deltaTime;
             float mouseY = Input.GetAxis("Mouse Y") * 100f * Time.deltaTime;

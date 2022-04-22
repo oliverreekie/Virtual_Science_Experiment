@@ -24,5 +24,9 @@ public class CloseButtonController : MonoBehaviour
         {
             canvasController.swapGraphState();
         }
+        else if (this.name == "Equation Close Button")
+        {
+            canvasController.swapEquationState();
+        }
     }
 }

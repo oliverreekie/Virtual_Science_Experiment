@@ -16,7 +16,7 @@ public class PickUp : MonoBehaviour
 
         string name = GetComponent<Rigidbody>().name;
 
-        if(dist <= 3)
+        if(dist <= 4)
         {
             if(GetComponent<Rigidbody>().name != "ClampStand_LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF, Timer" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGON, Timer, Wires" && GetComponent<Rigidbody>().name != "Clipboard")
             {
