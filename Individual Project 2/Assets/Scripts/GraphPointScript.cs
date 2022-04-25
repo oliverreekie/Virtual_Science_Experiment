@@ -13,6 +13,10 @@ public class GraphPointScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public GameObject graphCanvas;
 
+    public GameObject binLocator;
+
+    public GameObject spawnLocator;
+
     public void OnPointerDown(PointerEventData eventData)
     {
         isHolding = true;
@@ -22,13 +26,13 @@ public class GraphPointScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         isHolding = false;
 
-        if (this.transform.position.x >= 2347 && this.transform.position.x <= 2479)
+        //Delete over bin button
+        float distance = Vector3.Distance(this.transform.position, binLocator.transform.position);
+        if(distance <= 80)
         {
-            if (this.transform.position.y >= 99 && this.transform.position.y <= 247)
-            {
-                Destroy(createImage);
-            }
+            Destroy(createImage);
         }
+
     }
 
     void Start()
@@ -58,6 +62,6 @@ public class GraphPointScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     private void InstantiateNewImage()
     {
-        Instantiate(createImage, new Vector3(1289, 176, this.transform.position.z), new Quaternion(0, 0, 0, 0), graphCanvas.transform);
+        Instantiate(createImage, new Vector3(spawnLocator.transform.position.x, spawnLocator.transform.position.y, this.transform.position.z), new Quaternion(0, 0, 0, 0), graphCanvas.transform);
     }
 }

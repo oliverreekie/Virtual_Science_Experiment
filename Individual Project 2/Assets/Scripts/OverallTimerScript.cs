@@ -11,16 +11,22 @@ public class OverallTimerScript : MonoBehaviour
 
     private int timerMinutes = 0;
 
+    public Canvas menu;
+
     void Update()
     {
-        timerSeconds += Time.deltaTime;
-
-        if(timerSeconds >= 60)
+        if(menu.isActiveAndEnabled == false)
         {
-            timerSeconds = 0;
-            timerMinutes += 1;
+            timerSeconds += Time.deltaTime;
+
+            if (timerSeconds >= 60)
+            {
+                timerSeconds = 0;
+                timerMinutes += 1;
+            }
+
+            timerLabel.text = (timerMinutes.ToString() + "m " + timerSeconds.ToString("0.0") + "s");
         }
 
-        timerLabel.text = (timerMinutes.ToString() + "m " + timerSeconds.ToString("0.0") + "s");
     }
 }

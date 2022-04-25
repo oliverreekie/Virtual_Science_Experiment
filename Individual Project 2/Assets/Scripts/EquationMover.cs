@@ -19,6 +19,8 @@ public class EquationMover : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     public EquationController equation;
 
+    public GameObject theBox;
+
     public void OnPointerDown(PointerEventData eventData)
     {
         if(canHold == true)
@@ -31,69 +33,31 @@ public class EquationMover : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     {
         isHolding = false;
 
-        if (whichLetter == 1)
+
+        float distance = Vector3.Distance(this.transform.position, theBox.transform.position);
+        print(distance);
+        if(distance <= 25)
         {
-            if (Input.mousePosition.x <= 405 && Input.mousePosition.x > 324)
+            this.transform.position = new Vector3(theBox.transform.position.x, theBox.transform.position.y, theBox.transform.position.z);
+            canHold = false;
+
+            box.color = new Color32(0, 161, 65, 255);
+
+            if(this.name == "v")
             {
-                if (Input.mousePosition.y <= 327 && Input.mousePosition.y >= 231)
-                {
-                    this.transform.position = new Vector3(370, 275, this.transform.position.z);
-
-                    canHold = false;
-
-                    box.color = new Color32(0, 161, 65, 255);
-
-                    equation.setVComplete(true);
-                }
+               equation.setVComplete(true);
             }
-
-        }
-        else if (whichLetter == 2)
-        {
-            if (Input.mousePosition.x <= 861 && Input.mousePosition.x > 785)
+            else if(this.name == "u")
             {
-                if (Input.mousePosition.y <= 327 && Input.mousePosition.y >= 231)
-                {
-                    this.transform.position = new Vector3(823, 275, this.transform.position.z);
-
-                    canHold = false;
-
-                    box.color = new Color32(0, 161, 65, 255);
-
-                    equation.setAComplete(true);
-                }
+                equation.setUComplete(true);
             }
-        }
-        else if (whichLetter == 3)
-        {
-            if (Input.mousePosition.x <= 592 && Input.mousePosition.x > 513)
+            else if (this.name == "s")
             {
-                if (Input.mousePosition.y <= 327 && Input.mousePosition.y >= 231)
-                {
-                    this.transform.position = new Vector3(557, 275, this.transform.position.z);
-
-                    canHold = false;
-
-                    box.color = new Color32(0, 161, 65, 255);
-
-                    equation.setSComplete(true);
-                }
+                equation.setSComplete(true);
             }
-        }
-        else if (whichLetter == 4)
-        {
-            if (Input.mousePosition.x <= 703 && Input.mousePosition.x > 624)
+            else if (this.name == "a")
             {
-                if (Input.mousePosition.y <= 327 && Input.mousePosition.y >= 231)
-                {
-                    this.transform.position = new Vector3(680, 275, this.transform.position.z);
-
-                    canHold = false;
-
-                    box.color = new Color32(0, 161, 65, 255);
-
-                    equation.setUComplete(true);
-                }
+                equation.setAComplete(true);
             }
         }
     }

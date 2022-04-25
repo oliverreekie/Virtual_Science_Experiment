@@ -15,6 +15,12 @@ public class GraphTitleScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     private bool isRotated = false;
 
+    public GameObject leftGuide;
+
+    public GameObject binLocator;
+
+    public GameObject spawnLocator;
+
     public void OnPointerDown(PointerEventData eventData)
     {
         isHolding = true;
@@ -24,13 +30,11 @@ public class GraphTitleScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     {
         isHolding = false;
 
-
-        if (this.transform.position.x >= 2347 && this.transform.position.x <= 2479)
+        //Delete over bin button
+        float distance = Vector3.Distance(this.transform.position, binLocator.transform.position);
+        if (distance <= 80)
         {
-            if (this.transform.position.y >= 99 && this.transform.position.y <= 247)
-            {
-                Destroy(createInputField);
-            }
+            Destroy(createInputField);
         }
     }
 
@@ -53,16 +57,24 @@ public class GraphTitleScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             this.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, this.transform.position.z);
         }
 
-/*        //Should it rotate
-        if (this.transform.position.x <= 1100)
+        //Should it rotate
+        if (this.transform.position.x <= leftGuide.transform.position.x)
         {
-            if(isRotated == false)
+            if (isRotated == false)
             {
-                this.transform.rotation = new Quaternion(180, -180, 0, 0);
+                this.transform.rotation = Quaternion.Euler(0, 0, 90);
                 isRotated = true;
-                print("yep");
             }
-        }*/
+        }
+        else if(this.transform.position.x > leftGuide.transform.position.x)
+        {
+            if (isRotated == true)
+            {
+                this.transform.rotation = Quaternion.Euler(0, 0, 0);
+                isRotated = false;
+                print("yes");
+            }
+        }
     }
 
     private Vector2 getPointLocation()
@@ -72,6 +84,6 @@ public class GraphTitleScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     private void InstantiateNewInputField()
     {
-        Instantiate(createInputField, new Vector3(1669, 90, this.transform.position.z), new Quaternion(0, 0, 0, 0), graphCanvas.transform);
+        Instantiate(createInputField, new Vector3(spawnLocator.transform.position.x, spawnLocator.transform.position.y, this.transform.position.z), new Quaternion(0, 0, 0, 0), graphCanvas.transform);
     }
 }

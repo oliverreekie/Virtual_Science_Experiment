@@ -1,76 +1,55 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 
-public class MenuController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class MenuController : MonoBehaviour
 {
     public GameObject grey;
 
     public GameObject colour;
 
-    private bool determinationGActive = false;
+    private bool determinationGActive;
+
+    public GameObject topRight;
+
+    public GameObject bottomLeft;
+
+    void Start()
+    {
+        colour.SetActive(false);
+        determinationGActive = false;
+    }
 
     void Update()
     {
         if (determinationGActive == false)
         {
-            if (Input.mousePosition.x >= 273.1 && Input.mousePosition.x <= 608.7)
+            //If hovering over determination of g
+            if (Input.mousePosition.x <= topRight.transform.position.x && Input.mousePosition.x >= bottomLeft.transform.position.x)
             {
-                if (Input.mousePosition.y >= 998.6 && Input.mousePosition.y <= 1173)
+                if (Input.mousePosition.y <= topRight.transform.position.y && Input.mousePosition.y >= bottomLeft.transform.position.y)
                 {
-                    grey.SetActive(false);
                     colour.SetActive(true);
-                }
-                else
-                {
-                    grey.SetActive(true);
-                    colour.SetActive(false);
                 }
             }
             else
             {
-                grey.SetActive(true);
                 colour.SetActive(false);
             }
         }
-        if(determinationGActive == true)
-        {
-            grey.SetActive(false);
-            colour.SetActive(true);
-        }
 
+        print(determinationGActive);
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void SetDeterminationGActive(bool b)
     {
-        //If over the determination of g button
-        if (determinationGActive == false)
-        {
-            if (Input.mousePosition.x >= 273.1 && Input.mousePosition.x <= 608.7)
-            {
-                if (Input.mousePosition.y >= 998.6 && Input.mousePosition.y <= 1173)
-                {
-                    determinationGActive = true;
-                }
-            }
-        }
-
-        //If over the start practical button
-        if(determinationGActive == true)
-        {
-            if(Input.mousePosition.x <= 1174 && Input.mousePosition.x >= 875)
-            {
-                if(Input.mousePosition.y <= 350 && Input.mousePosition.y >= 258)
-                {
-                    SceneManager.LoadScene(sceneName: "Determination_of_g_scene");
-                }
-            }
-        }
+        determinationGActive = b;
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public bool GetDeterminationGActive()
     {
+        return determinationGActive;
     }
+
+
 }

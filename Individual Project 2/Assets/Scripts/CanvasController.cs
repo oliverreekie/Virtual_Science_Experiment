@@ -32,6 +32,10 @@ public class CanvasController : MonoBehaviour
 
     private bool HUDActive;
 
+    public GameObject MenuCanvas;
+
+    private bool MenuActive;
+
     void Start()
     {
         rulerCanvas.SetActive(false);
@@ -54,6 +58,9 @@ public class CanvasController : MonoBehaviour
 
         HUDCanvas.SetActive(false);
         HUDActive = false;
+
+        MenuCanvas.SetActive(false);
+        MenuActive = false;
     }
 
     private void Update()
@@ -73,6 +80,10 @@ public class CanvasController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.P))
         {
             swapWelcomeState();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            swapMenuState();
         }
     }
 
@@ -185,6 +196,21 @@ public class CanvasController : MonoBehaviour
             BuildState.Instance.setHUDCanvasOpen(false);
         }
     }
+    public void swapMenuState()
+    {
+        if (MenuActive == false)
+        {
+            MenuCanvas.SetActive(true);
+            MenuActive = true;
+            BuildState.Instance.setMenuCanvasOpen(true);
+        }
+        else
+        {
+            MenuCanvas.SetActive(false);
+            MenuActive = false;
+            BuildState.Instance.setMenuCanvasOpen(false);
+        }
+    }
 
     public bool getRulerActive()
     {
@@ -213,5 +239,9 @@ public class CanvasController : MonoBehaviour
     public bool getHUDActive()
     {
         return HUDActive;
+    }
+    public bool getMenuActive()
+    {
+        return MenuActive;
     }
 }

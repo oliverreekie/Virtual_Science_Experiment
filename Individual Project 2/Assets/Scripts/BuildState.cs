@@ -33,6 +33,8 @@ public class BuildState : MonoBehaviour
 
     private bool HUDCanvasOpen = true;
 
+    private bool MenuCanvasOpen = false;
+
     public TextMeshProUGUI currentGoalLabel;
 
     private void Awake()
@@ -156,5 +158,14 @@ public class BuildState : MonoBehaviour
     public bool getHUDCanvasOpen()
     {
         return HUDCanvasOpen;
+    }
+    public void setMenuCanvasOpen(bool b)
+    {
+        MenuCanvasOpen = b;
+    }
+
+    public bool getMenuCanvasOpen()
+    {
+        return MenuCanvasOpen;
     }
 }

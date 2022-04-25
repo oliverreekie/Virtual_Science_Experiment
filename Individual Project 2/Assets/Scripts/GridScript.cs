@@ -29,8 +29,9 @@ public class GridScript : Graphic
 
     private int columnValue;
 
-
     private List<TMP_InputField> currentInputFields = new List<TMP_InputField>();
+
+    public GameObject theLocation;
 
     public void Start()
     {
@@ -179,14 +180,16 @@ public class GridScript : Graphic
 
                     if (i == 0 && j == 0)
                     {
-                        InstantiateInputField(new Vector3(220 - columnHold, 1017 - rowHold, 0));
+                        //InstantiateInputField(new Vector3(219 - columnHold, 1017 - rowHold, 0));
+                        InstantiateInputField(new Vector3(theLocation.transform.position.x - columnHold, theLocation.transform.position.y - rowHold, 0));
                     }
                     else
                     {
                         float columnAmount = 738 / columns;
                         float rowAmount = 954 / rows;
 
-                        InstantiateInputField(new Vector3(218 + (columnAmount * j) - columnHold, 1017 - (rowAmount * i) - rowHold, 0));
+                        //InstantiateInputField(new Vector3(219 + (columnAmount * j) - columnHold, 1017 - (rowAmount * i) - rowHold, 0));
+                        InstantiateInputField(new Vector3(theLocation.transform.position.x + (columnAmount * j) - columnHold, theLocation.transform.position.y - (rowAmount * i) - rowHold, 0));
                     }
                 }
             }

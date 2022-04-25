@@ -49,7 +49,7 @@ public class GraphPaper : Graphic
 
         SetVerticesDirty();
 
-        numbers += (int)Input.mouseScrollDelta.y;
+        numbers -= (int)Input.mouseScrollDelta.y;
 
         if(numbers <= 1)
         {
@@ -96,7 +96,7 @@ public class GraphPaper : Graphic
 
         int smallCounter = 0;
 
-        for(int i = 0; i < smallColumns; i++)
+        for(int i = 0; i <= smallColumns + 2; i++)
         {
             for(int j = 0; j < smallRows; j++)
             {
