@@ -14,6 +14,7 @@ public class WelcomeCanvasController : MonoBehaviour
     public GameObject stage2;
     public GameObject stage3;
     public GameObject stage4;
+    public GameObject stage5;
 
     public TextMeshProUGUI theText;
 
@@ -29,7 +30,7 @@ public class WelcomeCanvasController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        theText.text = stageNumber + " of 4";
+        theText.text = stageNumber + " of 5";
 
         if(stageNumber == 1)
         {
@@ -37,6 +38,7 @@ public class WelcomeCanvasController : MonoBehaviour
             stage2.SetActive(false);
             stage3.SetActive(false);
             stage4.SetActive(false);
+            stage5.SetActive(false);
         }
         if (stageNumber == 2)
         {
@@ -44,6 +46,7 @@ public class WelcomeCanvasController : MonoBehaviour
             stage2.SetActive(true);
             stage3.SetActive(false);
             stage4.SetActive(false);
+            stage5.SetActive(false);
         }
         if (stageNumber == 3)
         {
@@ -51,6 +54,7 @@ public class WelcomeCanvasController : MonoBehaviour
             stage2.SetActive(false);
             stage3.SetActive(true);
             stage4.SetActive(false);
+            stage5.SetActive(false);
         }
         if (stageNumber == 4)
         {
@@ -58,6 +62,15 @@ public class WelcomeCanvasController : MonoBehaviour
             stage2.SetActive(false);
             stage3.SetActive(false);
             stage4.SetActive(true);
+            stage5.SetActive(false);
+        }
+        if (stageNumber == 5)
+        {
+            stage1.SetActive(false);
+            stage2.SetActive(false);
+            stage3.SetActive(false);
+            stage4.SetActive(false);
+            stage5.SetActive(true);
         }
     }
 

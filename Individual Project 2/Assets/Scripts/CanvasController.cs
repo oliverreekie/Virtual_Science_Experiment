@@ -36,6 +36,24 @@ public class CanvasController : MonoBehaviour
 
     private bool MenuActive;
 
+    public GameObject InfoCanvas;
+
+    private bool InfoActive;
+
+    public GameObject FinalCanvas;
+
+    private bool FinalActive;
+
+    public GameObject graphOpenButton;
+
+    public GameObject tableOpenButton;
+
+    public bool isDrawing = false;
+
+    public bool isShowingGradient = false;
+
+    public GameObject gradientLines;
+
     void Start()
     {
         rulerCanvas.SetActive(false);
@@ -61,6 +79,14 @@ public class CanvasController : MonoBehaviour
 
         MenuCanvas.SetActive(false);
         MenuActive = false;
+
+        InfoCanvas.SetActive(false);
+        InfoActive = false;
+
+        FinalCanvas.SetActive(false);
+        FinalActive = false;
+
+        gradientLines.SetActive(false);
     }
 
     private void Update()
@@ -69,7 +95,7 @@ public class CanvasController : MonoBehaviour
         {
             swapNotesState();
         }
-        else if (Input.GetKeyDown(KeyCode.G))
+/*        else if (Input.GetKeyDown(KeyCode.G))
         {
             swapGraphState();
         }
@@ -81,9 +107,44 @@ public class CanvasController : MonoBehaviour
         {
             swapWelcomeState();
         }
+        else if (Input.GetKeyDown(KeyCode.I))
+        {
+            swapInfoState();
+        }*/
+        else if (Input.GetKeyDown(KeyCode.F))
+        {
+            swapFinalState();
+        }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
             swapMenuState();
+        }
+
+        if(graphCanvas.activeInHierarchy == true)
+        {
+            graphOpenButton.SetActive(false);
+        }
+        else
+        {
+            graphOpenButton.SetActive(true);
+        }
+
+        if (tableCanvas.activeInHierarchy == true)
+        {
+            tableOpenButton.SetActive(false);
+        }
+        else
+        {
+            tableOpenButton.SetActive(true);
+        }
+
+        if(isShowingGradient == true)
+        {
+            gradientLines.SetActive(true);
+        }
+        else
+        {
+            gradientLines.SetActive(false);
         }
     }
 
@@ -211,6 +272,36 @@ public class CanvasController : MonoBehaviour
             BuildState.Instance.setMenuCanvasOpen(false);
         }
     }
+    public void swapInfoState()
+    {
+        if (InfoActive == false)
+        {
+            InfoCanvas.SetActive(true);
+            InfoActive = true;
+            BuildState.Instance.setInfoCanvasOpen(true);
+        }
+        else
+        {
+            InfoCanvas.SetActive(false);
+            InfoActive = false;
+            BuildState.Instance.setInfoCanvasOpen(false);
+        }
+    }
+    public void swapFinalState()
+    {
+        if (FinalActive == false)
+        {
+            FinalCanvas.SetActive(true);
+            FinalActive = true;
+            BuildState.Instance.setFinalCanvasOpen(true);
+        }
+        else
+        {
+            FinalCanvas.SetActive(false);
+            FinalActive = false;
+            BuildState.Instance.setFinalCanvasOpen(false);
+        }
+    }
 
     public bool getRulerActive()
     {
@@ -243,5 +334,13 @@ public class CanvasController : MonoBehaviour
     public bool getMenuActive()
     {
         return MenuActive;
+    }
+    public bool getInfoActive()
+    {
+        return InfoActive;
+    }
+    public bool getFinalActive()
+    {
+        return FinalActive;
     }
 }

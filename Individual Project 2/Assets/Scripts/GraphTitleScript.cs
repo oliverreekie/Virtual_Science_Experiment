@@ -21,6 +21,9 @@ public class GraphTitleScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public GameObject spawnLocator;
 
+    public GradingTracker gradingTracker;
+
+
     public void OnPointerDown(PointerEventData eventData)
     {
         isHolding = true;
@@ -41,6 +44,8 @@ public class GraphTitleScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     void Start()
     {
         pointLocation = new Vector2(389, -630);
+
+        gradingTracker.graphLabels.Add(this.gameObject);
     }
 
     void Update()
@@ -85,5 +90,9 @@ public class GraphTitleScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     private void InstantiateNewInputField()
     {
         Instantiate(createInputField, new Vector3(spawnLocator.transform.position.x, spawnLocator.transform.position.y, this.transform.position.z), new Quaternion(0, 0, 0, 0), graphCanvas.transform);
+
+        //GameObject newField = (GameObject)Instantiate(createInputField, new Vector3(spawnLocator.transform.position.x, spawnLocator.transform.position.y, this.transform.position.z), new Quaternion(0, 0, 0, 0), graphCanvas.transform);
+
+        //gradingTracker.graphLabels.Add(newField);
     }
 }

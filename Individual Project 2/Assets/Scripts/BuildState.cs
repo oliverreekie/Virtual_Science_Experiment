@@ -7,7 +7,7 @@ public class BuildState : MonoBehaviour
 {
     public static BuildState Instance { get; private set; }
 
-    private string buildState = "Nothing";
+    public string buildState = "Info";
 
     public GameObject clampStand;
 
@@ -35,7 +35,17 @@ public class BuildState : MonoBehaviour
 
     private bool MenuCanvasOpen = false;
 
+    private bool InfoCanvasOpen = false;
+
+    private bool FinalCanvasOpen = false;
+
     public TextMeshProUGUI currentGoalLabel;
+
+    public TextMeshProUGUI mainGoalLabel;
+
+    public string independentVariable;
+
+    public string dependentVariable;
 
     private void Awake()
     {
@@ -51,8 +61,18 @@ public class BuildState : MonoBehaviour
     }
     public void Update()
     {
-        if(buildState == "Nothing")
+        if(buildState == "Info")
         {
+            mainGoalLabel.text = "Plan the Experiment";
+            currentGoalLabel.text = "Read the info sheet and fill in variables";
+        }
+        if (buildState == "Equation")
+        {
+            currentGoalLabel.text = "Read the equation sheet and solve the equations";
+        }
+        if (buildState == "Nothing")
+        {
+            mainGoalLabel.text = "Build the Apparatus";
             currentGoalLabel.text = "Add the clampstand";
         }
         if (buildState == "ClampStand")
@@ -74,10 +94,27 @@ public class BuildState : MonoBehaviour
             Destroy(clampStandLGOFFRuler);
             currentGoalLabel.text = "Add the wires";
         }
-        if (buildState == "Ruler, Clamp, LGOFF, Timer, Wires")
+/*        if (buildState == "Ruler, Clamp, LGOFF, Timer, Wires")
         {
             Destroy(clampStandLGOFFRulerTimer);
             Destroy(buildCheck);
+        }*/
+        if (buildState == "Table")
+        {
+            Destroy(clampStandLGOFFRulerTimer);
+            Destroy(buildCheck);
+            mainGoalLabel.text = "Check evaluation sheets";
+            currentGoalLabel.text = "Read the table page";
+        }
+        if (buildState == "Graph")
+        {
+            mainGoalLabel.text = "Check evaluation sheets";
+            currentGoalLabel.text = "Read the graph page";
+        }
+        if (buildState == "Dropping")
+        {
+            mainGoalLabel.text = "Conduct Experiment";
+            currentGoalLabel.text = "Systematically drop card through light gate and record values";
         }
     }
 
@@ -167,5 +204,23 @@ public class BuildState : MonoBehaviour
     public bool getMenuCanvasOpen()
     {
         return MenuCanvasOpen;
+    }
+    public void setInfoCanvasOpen(bool b)
+    {
+        InfoCanvasOpen = b;
+    }
+
+    public bool getInfoCanvasOpen()
+    {
+        return InfoCanvasOpen;
+    }
+    public void setFinalCanvasOpen(bool b)
+    {
+        FinalCanvasOpen = b;
+    }
+
+    public bool getFinalCanvasOpen()
+    {
+        return FinalCanvasOpen;
     }
 }

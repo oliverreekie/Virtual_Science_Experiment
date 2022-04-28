@@ -10,6 +10,8 @@ public class PickUp : MonoBehaviour
 
     public CanvasController canvasController;
 
+    public ArrowController arrowController;
+
     private void OnMouseDown()
     {
         float dist = Vector3.Distance(GetComponent<Rigidbody>().position, GameObject.Find("HoldPoint").transform.position);
@@ -18,7 +20,9 @@ public class PickUp : MonoBehaviour
 
         if(dist <= 4)
         {
-            if(GetComponent<Rigidbody>().name != "ClampStand_LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF, Timer" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGON, Timer, Wires" && GetComponent<Rigidbody>().name != "Clipboard")
+            if(GetComponent<Rigidbody>().name != "ClampStand_LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF, Timer" 
+                && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGON, Timer, Wires" && GetComponent<Rigidbody>().name != "Clipboard" && GetComponent<Rigidbody>().name != "Info Page"
+                && GetComponent<Rigidbody>().name != "Graph Page" && GetComponent<Rigidbody>().name != "Equation Page")
             {
                 GetComponent<Rigidbody>().useGravity = false;
                 this.transform.position = toHoldPoint.position;
@@ -29,8 +33,24 @@ public class PickUp : MonoBehaviour
             }
             else if (HoldPointScript.Instance.getLookingAt() == "Clipboard")
             {
+                arrowController.arrowTable.SetActive(false);
                 canvasController.swapTableState();
-                //print("Hit");
+            }
+            else if (HoldPointScript.Instance.getLookingAt() == "Info Page")
+            {
+                arrowController.arrowInfo.SetActive(false);
+                canvasController.swapInfoState();
+
+            }
+            else if (HoldPointScript.Instance.getLookingAt() == "Graph Page")
+            {
+                arrowController.arrowGraph.SetActive(false);
+                canvasController.swapGraphState();
+            }
+            else if (HoldPointScript.Instance.getLookingAt() == "Equation Page")
+            {
+                arrowController.arrowEquation.SetActive(false);
+                canvasController.swapEquationState();
             }
         }
     }
@@ -50,6 +70,11 @@ public class PickUp : MonoBehaviour
                 this.transform.position = new Vector3((float)-5.057, (float)2.216, (float)5.218);
                 this.transform.rotation = new Quaternion(0, -180, 0, 0);
                 BuildState.Instance.setBuildState("ClampStand");
+
+                if(arrowController.buildHasOpened == true)
+                {
+                    arrowController.arrowBuild.SetActive(false);
+                }
             }
             else if (BuildState.Instance.getBuildState() == "ClampStand" && HoldPointScript.Instance.getObHolding() == "LightGate_Off")
             {
@@ -80,6 +105,12 @@ public class PickUp : MonoBehaviour
                 Destroy(gameObject);
 
                 toInstantiate.transform.position = new Vector3((float)-5.06, (float)2.206, (float)4.224);
+
+                if (arrowController.tableHasOpened == false)
+                {
+                    arrowController.arrowTable.SetActive(true);
+                    BuildState.Instance.buildState = "Table";
+                }
             }
         }
         else if (HoldPointScript.Instance.getLookingAt() == "Ruler, Clamp, LGON, Timer, Wires" && HoldPointScript.Instance.getObHolding() == "Weighted Card")

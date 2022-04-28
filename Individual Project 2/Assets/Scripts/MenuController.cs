@@ -14,10 +14,13 @@ public class MenuController : MonoBehaviour
 
     public GameObject bottomLeft;
 
+    public GameObject explanation;
+
     void Start()
     {
         colour.SetActive(false);
         determinationGActive = false;
+        explanation.SetActive(false);
     }
 
     void Update()
@@ -31,6 +34,10 @@ public class MenuController : MonoBehaviour
                 {
                     colour.SetActive(true);
                 }
+                else
+                {
+                    colour.SetActive(false);
+                }
             }
             else
             {
@@ -38,7 +45,14 @@ public class MenuController : MonoBehaviour
             }
         }
 
-        print(determinationGActive);
+        if(determinationGActive == true)
+        {
+            explanation.SetActive(true);
+        }
+        else
+        {
+            explanation.SetActive(false);
+        }
     }
 
     public void SetDeterminationGActive(bool b)

@@ -10,7 +10,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (BuildState.Instance.getRulerCanvasOpen() == false && BuildState.Instance.getNotesCanvasOpen() == false && BuildState.Instance.getGraphCanvasOpen() == false && BuildState.Instance.getWelcomeCanvasOpen() == false && BuildState.Instance.getMenuCanvasOpen() == false)
+        if (BuildState.Instance.getRulerCanvasOpen() == false && BuildState.Instance.getNotesCanvasOpen() == false && 
+            BuildState.Instance.getGraphCanvasOpen() == false && BuildState.Instance.getWelcomeCanvasOpen() == false && 
+            BuildState.Instance.getMenuCanvasOpen() == false && BuildState.Instance.getInfoCanvasOpen() == false && BuildState.Instance.getFinalCanvasOpen() == false)
         {
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");

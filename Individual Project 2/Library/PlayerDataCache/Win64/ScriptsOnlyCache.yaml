@@ -1,7 +1,9 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - ArrowController
     - ArrowScript
+    - BouncingArrow
     - BuildState
     - CameraAnimation
     - CanvasController
@@ -11,23 +13,24 @@ ScriptsOnlyBuild:
     - EquationMover
     - EquationSelector
     - GameMenuButtonController
+    - GradientLines
+    - GradingSystem
     - GraphLabelScript
     - GraphPaper
     - GraphPointScript
     - GraphTitleScript
     - GridScript
     - HoldPointScript
-    - InfoButtonController
     - MenuButton
     - MenuController
     - MouseMovement
-    - NotesScript
     - OverallTimerScript
     - PickUp
     - PlayerMovement
     - SetSliderValue
     - SkipButtonScript
     - ToHoldRaycast
+    - UILineRenderer
     - WeightedCardScript
     - WelcomeCanvasController
     - WiresScript
@@ -107,91 +110,97 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1500}
     - Class: 114
-      Script: {instanceID: 1562}
+      Script: {instanceID: 1550}
     - Class: 114
-      Script: {instanceID: 1604}
+      Script: {instanceID: 1564}
     - Class: 114
-      Script: {instanceID: 1634}
-    - Class: 114
-      Script: {instanceID: 1652}
+      Script: {instanceID: 1638}
     - Class: 114
       Script: {instanceID: 1656}
     - Class: 114
-      Script: {instanceID: 1674}
+      Script: {instanceID: 1660}
     - Class: 114
-      Script: {instanceID: 1692}
+      Script: {instanceID: 1678}
     - Class: 114
-      Script: {instanceID: 1702}
+      Script: {instanceID: 1696}
     - Class: 114
-      Script: {instanceID: 1784}
+      Script: {instanceID: 1706}
     - Class: 114
       Script: {instanceID: 1788}
     - Class: 114
-      Script: {instanceID: 1808}
+      Script: {instanceID: 1792}
     - Class: 114
-      Script: {instanceID: 2080}
+      Script: {instanceID: 1812}
     - Class: 114
-      Script: {instanceID: 2200}
+      Script: {instanceID: 1850}
     - Class: 114
-      Script: {instanceID: 2242}
+      Script: {instanceID: 1966}
     - Class: 114
-      Script: {instanceID: 2342}
+      Script: {instanceID: 2088}
     - Class: 114
-      Script: {instanceID: 2374}
+      Script: {instanceID: 2208}
     - Class: 114
-      Script: {instanceID: 2490}
+      Script: {instanceID: 2250}
     - Class: 114
-      Script: {instanceID: 2532}
+      Script: {instanceID: 2350}
     - Class: 114
-      Script: {instanceID: 2658}
+      Script: {instanceID: 2382}
     - Class: 114
-      Script: {instanceID: 2700}
+      Script: {instanceID: 2498}
     - Class: 114
-      Script: {instanceID: 2842}
+      Script: {instanceID: 2540}
     - Class: 114
-      Script: {instanceID: 2896}
+      Script: {instanceID: 2666}
     - Class: 114
-      Script: {instanceID: 2932}
+      Script: {instanceID: 2708}
     - Class: 114
-      Script: {instanceID: 2956}
+      Script: {instanceID: 2760}
     - Class: 114
-      Script: {instanceID: 2958}
+      Script: {instanceID: 2852}
     - Class: 114
-      Script: {instanceID: 2992}
+      Script: {instanceID: 2906}
     - Class: 114
-      Script: {instanceID: 3052}
+      Script: {instanceID: 2942}
     - Class: 114
-      Script: {instanceID: 3060}
+      Script: {instanceID: 2966}
     - Class: 114
-      Script: {instanceID: 3178}
+      Script: {instanceID: 2968}
     - Class: 114
-      Script: {instanceID: 3288}
+      Script: {instanceID: 3002}
     - Class: 114
-      Script: {instanceID: 3348}
+      Script: {instanceID: 3062}
     - Class: 114
-      Script: {instanceID: 3350}
+      Script: {instanceID: 3118}
     - Class: 114
-      Script: {instanceID: 3522}
+      Script: {instanceID: 3190}
     - Class: 114
-      Script: {instanceID: 3784}
+      Script: {instanceID: 3280}
     - Class: 114
-      Script: {instanceID: 3896}
+      Script: {instanceID: 3302}
     - Class: 114
-      Script: {instanceID: 4156}
+      Script: {instanceID: 3362}
     - Class: 114
-      Script: {instanceID: 4190}
+      Script: {instanceID: 3364}
     - Class: 114
-      Script: {instanceID: 4302}
+      Script: {instanceID: 3536}
     - Class: 114
-      Script: {instanceID: 4374}
+      Script: {instanceID: 3798}
     - Class: 114
-      Script: {instanceID: 4394}
+      Script: {instanceID: 3910}
     - Class: 114
-      Script: {instanceID: 4632}
+      Script: {instanceID: 4170}
     - Class: 114
-      Script: {instanceID: 285914}
+      Script: {instanceID: 4204}
     - Class: 114
-      Script: {instanceID: 381350}
+      Script: {instanceID: 4316}
+    - Class: 114
+      Script: {instanceID: 4388}
+    - Class: 114
+      Script: {instanceID: 4408}
+    - Class: 114
+      Script: {instanceID: 4646}
+    - Class: 114
+      Script: {instanceID: 115146}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -252,39 +261,39 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1500}
     - Class: 114
-      Script: {instanceID: 1788}
+      Script: {instanceID: 1612}
     - Class: 114
-      Script: {instanceID: 2070}
+      Script: {instanceID: 1792}
     - Class: 114
-      Script: {instanceID: 2080}
+      Script: {instanceID: 2078}
     - Class: 114
-      Script: {instanceID: 2200}
+      Script: {instanceID: 2088}
     - Class: 114
-      Script: {instanceID: 2358}
+      Script: {instanceID: 2208}
     - Class: 114
-      Script: {instanceID: 2374}
+      Script: {instanceID: 2366}
     - Class: 114
-      Script: {instanceID: 2490}
+      Script: {instanceID: 2382}
     - Class: 114
-      Script: {instanceID: 2658}
+      Script: {instanceID: 2498}
     - Class: 114
-      Script: {instanceID: 2842}
+      Script: {instanceID: 2666}
     - Class: 114
-      Script: {instanceID: 2896}
+      Script: {instanceID: 2852}
     - Class: 114
-      Script: {instanceID: 2932}
+      Script: {instanceID: 2906}
     - Class: 114
-      Script: {instanceID: 3348}
+      Script: {instanceID: 2942}
     - Class: 114
-      Script: {instanceID: 3802}
+      Script: {instanceID: 3362}
     - Class: 114
-      Script: {instanceID: 3914}
+      Script: {instanceID: 3816}
     - Class: 114
-      Script: {instanceID: 4184}
+      Script: {instanceID: 3928}
     - Class: 114
-      Script: {instanceID: 4568}
+      Script: {instanceID: 4198}
     - Class: 114
-      Script: {instanceID: 577488}
+      Script: {instanceID: 4582}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -316,16 +325,22 @@ ScriptsOnlyBuild:
     className: AnimationPlayableAsset
   - hash:
       serializedVersion: 2
+      Hash: 25933d01c43c88d8e7492d8c463c8ea6
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ArrowController
+  - hash:
+      serializedVersion: 2
       Hash: 77aaaaa51f7a8d8ff333a879741e47d2
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_InputField
   - hash:
       serializedVersion: 2
-      Hash: 1c6461b0d17bae938cb59aefb45d4ad0
+      Hash: cfa93e0aa575524a6217c9a9f6511308
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: NotesScript
+    className: MenuButton
   - hash:
       serializedVersion: 2
       Hash: 62fef86270a167c41a606cfca1ecc156
@@ -376,7 +391,7 @@ ScriptsOnlyBuild:
     className: Selectable
   - hash:
       serializedVersion: 2
-      Hash: e76c1a4d601465a4812fbce08cacb7b8
+      Hash: a5171fcc823bb00faf1543f1ac04e584
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CloseButtonController
@@ -430,7 +445,7 @@ ScriptsOnlyBuild:
     className: SimpleScript
   - hash:
       serializedVersion: 2
-      Hash: 4665b339ae6fd467e2de610a0534590a
+      Hash: 4316f85b3626eb921e4a8983943957d0
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CanvasController
@@ -438,8 +453,20 @@ ScriptsOnlyBuild:
       serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BouncingArrow
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
     namespaceName: TMPro
     className: TMP_DigitValidator
+  - hash:
+      serializedVersion: 2
+      Hash: 1218c3d042d8b095dc62e1050c088443
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: UILineRenderer
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -472,7 +499,7 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
-      Hash: 4f57a02287ba2f6d50267f6e0cdff9cd
+      Hash: 57a486d38332927a5c17c0f3e855bdb9
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: WelcomeCanvasController
@@ -490,7 +517,7 @@ ScriptsOnlyBuild:
     className: OverallTimerScript
   - hash:
       serializedVersion: 2
-      Hash: bbf8796a7d8081ac99432dc589c43936
+      Hash: be9b8c7387bd0222b45ac527875dcc7e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MenuController
@@ -598,6 +625,12 @@ ScriptsOnlyBuild:
     className: Benchmark03
   - hash:
       serializedVersion: 2
+      Hash: 69fbdbdd00d953108a37edd144da4aba
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: EquationSelector
+  - hash:
+      serializedVersion: 2
       Hash: 748dd2a2a28da4e618912da5ac45684b
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.EventSystems
@@ -634,7 +667,7 @@ ScriptsOnlyBuild:
     className: BeforeAfterTestCommandState
   - hash:
       serializedVersion: 2
-      Hash: 6b65df4cf97fd9d8793061ea422a5184
+      Hash: 678b29c27bd9d9b601f2dc1210812e01
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PickUp
@@ -706,6 +739,12 @@ ScriptsOnlyBuild:
     className: ContentSizeFitter
   - hash:
       serializedVersion: 2
+      Hash: 4a83badfff60978ce83afaa269b1c2f4
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GradientLines
+  - hash:
+      serializedVersion: 2
       Hash: caa533b001ae39b864ba8425019e2268
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -748,7 +787,13 @@ ScriptsOnlyBuild:
     className: BaseInput
   - hash:
       serializedVersion: 2
-      Hash: 39354725c92e664a11037dcff2f0692f
+      Hash: bac40ca1b0699e9a7f4213ff9929d9d4
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GameMenuButtonController
+  - hash:
+      serializedVersion: 2
+      Hash: f3e47429efc6fb90319d130679310804
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SkipButtonScript
@@ -964,7 +1009,7 @@ ScriptsOnlyBuild:
     className: TMP_SpriteAsset
   - hash:
       serializedVersion: 2
-      Hash: 3201029634105050f7bb8f655cdb8371
+      Hash: c07ae725c55f148c7037927368c32467
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BuildState
@@ -1084,28 +1129,16 @@ ScriptsOnlyBuild:
     className: TMP_TextEventCheck
   - hash:
       serializedVersion: 2
-      Hash: b5d01a44c9a694c6b9bce4626dd0a12e
+      Hash: 43c0ded2114398fe16968c1f8bcbc3af
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ToHoldRaycast
   - hash:
       serializedVersion: 2
-      Hash: bac40ca1b0699e9a7f4213ff9929d9d4
+      Hash: 6c947054d654e84855fe03a8a9149ebe
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: GameMenuButtonController
-  - hash:
-      serializedVersion: 2
-      Hash: 69fbdbdd00d953108a37edd144da4aba
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: EquationSelector
-  - hash:
-      serializedVersion: 2
-      Hash: cfa93e0aa575524a6217c9a9f6511308
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: MenuButton
+    className: GradingSystem
   platform: 19
   scenePathNames:
   - Assets/Scenes/Main_Menu_Scene.unity

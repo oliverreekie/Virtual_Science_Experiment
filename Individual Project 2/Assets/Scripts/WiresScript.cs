@@ -26,16 +26,16 @@ public class WiresScript : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
         print("collide");
         running = true;
         timer = 0;
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        print("");
+        print("out");
         running = false;
     }
 }
