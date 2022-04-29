@@ -18,41 +18,50 @@ public class PickUp : MonoBehaviour
 
         string name = GetComponent<Rigidbody>().name;
 
-        if(dist <= 4)
+        if (canvasController.getFinalActive() == false && canvasController.getTableActive() == false && 
+            canvasController.getGraphActive() == false && canvasController.getInfoActive()== false && canvasController.getEquationActive() == false && canvasController.getNotesActive() == false)
         {
-            if(GetComponent<Rigidbody>().name != "ClampStand_LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF, Timer" 
-                && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGON, Timer, Wires" && GetComponent<Rigidbody>().name != "Clipboard" && GetComponent<Rigidbody>().name != "Info Page"
-                && GetComponent<Rigidbody>().name != "Graph Page" && GetComponent<Rigidbody>().name != "Equation Page")
+            if (dist <= 4)
             {
-                GetComponent<Rigidbody>().useGravity = false;
-                this.transform.position = toHoldPoint.position;
-                this.transform.parent = GameObject.Find("HoldPoint").transform;
+                if (GetComponent<Rigidbody>().name != "ClampStand_LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF, Timer"
+                    && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGON, Timer, Wires" && GetComponent<Rigidbody>().name != "Clipboard" && GetComponent<Rigidbody>().name != "Info Page"
+                    && GetComponent<Rigidbody>().name != "Graph Page" && GetComponent<Rigidbody>().name != "Equation Page" && GetComponent<Rigidbody>().name != "Final Page")
+                {
+                    GetComponent<Rigidbody>().useGravity = false;
+                    this.transform.position = toHoldPoint.position;
+                    this.transform.parent = GameObject.Find("HoldPoint").transform;
 
-                HoldPointScript.Instance.setIsHolding(true);
-                HoldPointScript.Instance.setObjHolding(GetComponent<Rigidbody>().name);
-            }
-            else if (HoldPointScript.Instance.getLookingAt() == "Clipboard")
-            {
-                arrowController.arrowTable.SetActive(false);
-                canvasController.swapTableState();
-            }
-            else if (HoldPointScript.Instance.getLookingAt() == "Info Page")
-            {
-                arrowController.arrowInfo.SetActive(false);
-                canvasController.swapInfoState();
-
-            }
-            else if (HoldPointScript.Instance.getLookingAt() == "Graph Page")
-            {
-                arrowController.arrowGraph.SetActive(false);
-                canvasController.swapGraphState();
-            }
-            else if (HoldPointScript.Instance.getLookingAt() == "Equation Page")
-            {
-                arrowController.arrowEquation.SetActive(false);
-                canvasController.swapEquationState();
+                    HoldPointScript.Instance.setIsHolding(true);
+                    HoldPointScript.Instance.setObjHolding(GetComponent<Rigidbody>().name);
+                }
+                else if (HoldPointScript.Instance.getLookingAt() == "Clipboard")
+                {
+                    arrowController.arrowTable.SetActive(false);
+                    canvasController.swapTableState();
+                }
+                else if (HoldPointScript.Instance.getLookingAt() == "Info Page")
+                {
+                    arrowController.arrowInfo.SetActive(false);
+                    canvasController.swapInfoState();
+                }
+                else if (HoldPointScript.Instance.getLookingAt() == "Final Page")
+                {
+                    arrowController.arrowFinal.SetActive(false);
+                    canvasController.swapFinalState();
+                }
+                else if (HoldPointScript.Instance.getLookingAt() == "Graph Page")
+                {
+                    arrowController.arrowGraph.SetActive(false);
+                    canvasController.swapGraphState();
+                }
+                else if (HoldPointScript.Instance.getLookingAt() == "Equation Page")
+                {
+                    arrowController.arrowEquation.SetActive(false);
+                    canvasController.swapEquationState();
+                }
             }
         }
+        
     }
 
     private void OnMouseUp()

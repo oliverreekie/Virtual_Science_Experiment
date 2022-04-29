@@ -41,10 +41,22 @@ public class CloseButtonController : MonoBehaviour
             {
                 arrowController.graphInstructions.SetActive(false);
                 arrowController.graphInstructionsHasOpened = true;
-                BuildState.Instance.buildState = "Dropping";
+                BuildState.Instance.buildState = "Final";
+                arrowController.arrowFinal.SetActive(true);
             }
 
             canvasController.swapGraphState();
+        }
+        else if (this.name == "Final Close Button")
+        {
+            if(arrowController.finalHasOpened == false)
+            {
+                arrowController.finalHasOpened = true;
+                BuildState.Instance.buildState = "Dropping";
+                arrowController.arrowFinal.SetActive(false);
+                arrowController.finalInstructions.SetActive(false);
+            }
+            canvasController.swapFinalState();
         }
         else if (this.name == "Info Close Button")
         {
@@ -52,7 +64,7 @@ public class CloseButtonController : MonoBehaviour
             BuildState.Instance.dependentVariable = dependantField.text;
 
             canvasController.swapInfoState();
-            BuildState.Instance.buildState = "Nothing";
+            //BuildState.Instance.buildState = "Nothing";
             if (arrowController.equationHasOpened == false)
             {
                 arrowController.arrowEquation.SetActive(true);
@@ -77,10 +89,6 @@ public class CloseButtonController : MonoBehaviour
         else if (this.name == "Open Table Button")
         {
             canvasController.swapTableState();
-        }
-        else if (this.name == "Final Close Button")
-        {
-            canvasController.swapFinalState();
         }
         else if (this.name == "Draw Line Button")
         {

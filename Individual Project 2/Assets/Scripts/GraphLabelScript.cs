@@ -17,6 +17,8 @@ public class GraphLabelScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
 
     public GameObject spawnLocator;
 
+    public GradingTracker gradingTracker;
+
     public void OnPointerDown(PointerEventData eventData)
     {
         isHolding = true;
@@ -37,6 +39,8 @@ public class GraphLabelScript : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     void Start()
     {
         pointLocation = new Vector2(440, -544);
+
+        gradingTracker.graphLineLabels.Add(this.gameObject);
     }
 
     void Update()

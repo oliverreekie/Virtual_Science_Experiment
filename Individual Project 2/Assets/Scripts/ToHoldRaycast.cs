@@ -65,6 +65,11 @@ public class ToHoldRaycast : MonoBehaviour
                     uiText.text = "Open Graph";
                     HoldPointScript.Instance.setLookingAt("Graph Page");
                 }
+                else if (hit.collider.name == "Final Page")
+                {
+                    uiText.text = "Open Final Page";
+                    HoldPointScript.Instance.setLookingAt("Final Page");
+                }
                 else if (hit.collider.name == "Equation Page")
                 {
                     uiText.text = "Open Equation Page";

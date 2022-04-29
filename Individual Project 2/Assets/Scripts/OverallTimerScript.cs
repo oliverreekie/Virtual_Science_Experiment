@@ -13,9 +13,13 @@ public class OverallTimerScript : MonoBehaviour
 
     public Canvas menu;
 
+    public GradingSystem gradingSystem;
+
+    public string timerValue;
+
     void Update()
     {
-        if(menu.isActiveAndEnabled == false)
+        if(menu.isActiveAndEnabled == false && gradingSystem.isActiveAndEnabled == false)
         {
             timerSeconds += Time.deltaTime;
 
@@ -26,6 +30,7 @@ public class OverallTimerScript : MonoBehaviour
             }
 
             timerLabel.text = (timerMinutes.ToString() + "m " + timerSeconds.ToString("0.0") + "s");
+            timerValue = (timerMinutes.ToString() + "m " + timerSeconds.ToString("0.0") + "s");
         }
 
     }

@@ -111,6 +111,11 @@ public class BuildState : MonoBehaviour
             mainGoalLabel.text = "Check evaluation sheets";
             currentGoalLabel.text = "Read the graph page";
         }
+        if (buildState == "Final")
+        {
+            mainGoalLabel.text = "Check evaluation sheets";
+            currentGoalLabel.text = "Check final page";
+        }
         if (buildState == "Dropping")
         {
             mainGoalLabel.text = "Conduct Experiment";

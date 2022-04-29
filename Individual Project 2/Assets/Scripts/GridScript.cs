@@ -33,6 +33,8 @@ public class GridScript : Graphic
 
     public GameObject theLocation;
 
+    public GradingTracker gradingTracker;
+
     public void Start()
     {
         rowValue = 1;
@@ -48,13 +50,12 @@ public class GridScript : Graphic
         //Checks if the values have been changed
         if(rows != rowValue || columns != columnValue)
         {
-            //Calls everytime the values are changed
-            print("changed");
-
             //Remove current fields
             for(int i = 0; i < currentInputFields.Count; i++)
             {
                 Destroy(currentInputFields[i].gameObject);
+                gradingTracker.graphHeaders.Clear();
+                gradingTracker.allTableFields.Clear();
             }
 
             //Empties list
@@ -180,16 +181,23 @@ public class GridScript : Graphic
 
                     if (i == 0 && j == 0)
                     {
-                        //InstantiateInputField(new Vector3(219 - columnHold, 1017 - rowHold, 0));
-                        InstantiateInputField(new Vector3(theLocation.transform.position.x - columnHold, theLocation.transform.position.y - rowHold, 0));
+                        InstantiateInputField(new Vector3(theLocation.transform.position.x - columnHold, theLocation.transform.position.y - rowHold, 0), 0);
                     }
                     else
                     {
                         float columnAmount = 738 / columns;
                         float rowAmount = 954 / rows;
 
-                        //InstantiateInputField(new Vector3(219 + (columnAmount * j) - columnHold, 1017 - (rowAmount * i) - rowHold, 0));
-                        InstantiateInputField(new Vector3(theLocation.transform.position.x + (columnAmount * j) - columnHold, theLocation.transform.position.y - (rowAmount * i) - rowHold, 0));
+                        //If in row one, for grading system
+                        if (i == 0)
+                        {
+                            InstantiateInputField(new Vector3(theLocation.transform.position.x + (columnAmount * j) - columnHold, theLocation.transform.position.y - (rowAmount * i) - rowHold, 0), 0);
+                        }
+                        else
+                        {
+                            InstantiateInputField(new Vector3(theLocation.transform.position.x + (columnAmount * j) - columnHold, theLocation.transform.position.y - (rowAmount * i) - rowHold, 0), 1);
+                        }
+
                     }
                 }
             }
@@ -312,9 +320,25 @@ public class GridScript : Graphic
         vh.AddTriangle(offset + 14, offset + 15, offset + 12);
     }
 
-    private void InstantiateInputField(Vector3 v)
+    private void InstantiateInputField(Vector3 v, int i)
     {
         //Instantiate(theField, v, new Quaternion(0, 0, 0, 0), tableCanvas.transform);
-        currentInputFields.Add(Instantiate(theField, v, new Quaternion(0, 0, 0, 0), tableCanvas.transform));
+        //currentInputFields.Add(Instantiate(theField, v, new Quaternion(0, 0, 0, 0), tableCanvas.transform));
+        if(i == 0)
+        {
+            TMP_InputField theSet = Instantiate(theField, v, new Quaternion(0, 0, 0, 0), tableCanvas.transform);
+            currentInputFields.Add(theSet);
+            gradingTracker.graphHeaders.Add(theSet);
+
+            gradingTracker.allTableFields.Add(theSet);
+        }
+        else
+        {
+            TMP_InputField theSet = Instantiate(theField, v, new Quaternion(0, 0, 0, 0), tableCanvas.transform);
+            currentInputFields.Add(theSet);
+
+            gradingTracker.allTableFields.Add(theSet);
+        }
+
     }
 }
