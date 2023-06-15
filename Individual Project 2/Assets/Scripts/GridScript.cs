@@ -5,14 +5,20 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
+//This class contains code reused from (Game Dev Guide, 2020)
+//This reused code is found on the lines
+//229-338
+
 public class GridScript : Graphic
 {
     public int rows;
     public int columns;
 
+    //Number of rows and columns of squares
     float width;
     float height;
 
+    //Width of the lines
     float widthOfLine = (float)4;
 
     float totalWidth;
@@ -65,7 +71,7 @@ public class GridScript : Graphic
             float ySize = (520 * 2) / rows;
             float xSize = 400 / columns;
 
-
+            //Offset location of each field based on row number to ensure all fields match up
             for(int i = 0; i < rows; i++)
             {
                 for(int j = 0; j < columns; j++)
@@ -144,6 +150,7 @@ public class GridScript : Graphic
                         rowHold = -24;
                     }
 
+                    //Offset location of each field based on column number to ensure all fields match up
                     float columnHold = 0;
                     if(columns == 1)
                     {
@@ -178,13 +185,14 @@ public class GridScript : Graphic
                         columnHold = 34;
                     }
 
-
+                    //Instantiate first inputfield
                     if (i == 0 && j == 0)
                     {
                         InstantiateInputField(new Vector3(theLocation.transform.position.x - columnHold, theLocation.transform.position.y - rowHold, 0), 0);
                     }
                     else
                     {
+                        //Instantiate inputfields considering offsets required
                         float columnAmount = 738 / columns;
                         float rowAmount = 954 / rows;
 
@@ -202,7 +210,7 @@ public class GridScript : Graphic
                 }
             }
 
-            //Reszing the input fields
+            //Reszing the input fields based on number of rows and columns
             for(int i = 0; i < currentInputFields.Count; i++)
             {
                 currentInputFields[i].GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (954 / rows) - 2);
@@ -214,23 +222,28 @@ public class GridScript : Graphic
         rowValue = rows;
         columnValue = columns;
 
+        //Update graphics class
         SetVerticesDirty();
     }
 
+    //This method is reused from (Game Dev Guide, 2020)
     protected override void OnPopulateMesh(VertexHelper vh)
     {
-
+        //Clear previous triangles
         vh.Clear();
 
+        //Set the size of the graph paper
         totalWidth = rectTransform.rect.width;
         totalHeight = rectTransform.rect.height;
 
+        //Calculate size of squares
         width = totalWidth / (float)columns;
         height = totalHeight / (float)rows;
 
         int counter = 0;
 
-        for(int i = 0; i < columns; i++)
+        //Create squares to fill grid
+        for (int i = 0; i < columns; i++)
         {
             for(int j = 0; j < rows; j++)
             {
@@ -241,13 +254,19 @@ public class GridScript : Graphic
 
     }
 
+    //This method is reused from (Game Dev Guide, 2020) Modifications were made by myself to fit the project
+    //Create a sqaure
     void createSquare(int x, int y, int counter, VertexHelper vh)
     {
+        //Set size of the square
         float xPos = (width * x) - (int)(totalWidth / 2);
         float yPos = (height * y) - (int)(totalHeight / 2);
 
+        //Start drawing
         UIVertex vertex = UIVertex.simpleVert;
         vertex.color = color;
+
+        //For each side calculate the coordinates and draw triangles between each of them
 
         //Left Side
         vertex.position = new Vector3(xPos, yPos);
@@ -320,12 +339,14 @@ public class GridScript : Graphic
         vh.AddTriangle(offset + 14, offset + 15, offset + 12);
     }
 
+    //Create an inputfield in a square
     private void InstantiateInputField(Vector3 v, int i)
     {
-        //Instantiate(theField, v, new Quaternion(0, 0, 0, 0), tableCanvas.transform);
-        //currentInputFields.Add(Instantiate(theField, v, new Quaternion(0, 0, 0, 0), tableCanvas.transform));
+
+        //Instantiate inputfields at a given location and add refernce to grading tracker list
         if(i == 0)
         {
+            //If in the first row also add reference to graph headers list
             TMP_InputField theSet = Instantiate(theField, v, new Quaternion(0, 0, 0, 0), tableCanvas.transform);
             currentInputFields.Add(theSet);
             gradingTracker.graphHeaders.Add(theSet);

@@ -6,14 +6,12 @@ using TMPro;
 
 public class SetSliderValue : MonoBehaviour
 {
+    //Label to print slider number to
     public TextMeshProUGUI theText;
-
-    void Start()
-    {
-    }
 
     void Update()
     {
+        //Set label text to slider value
         theText.text = this.gameObject.GetComponent<Slider>().value.ToString();
     }
 }

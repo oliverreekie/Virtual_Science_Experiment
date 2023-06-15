@@ -7,20 +7,27 @@ using UnityEngine.UI;
 
 public class EquationMover : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    //Whether the user is holding the component
     private bool isHolding = false;
 
+    //Location of component
     private double arrowLocation;
 
+    //Which component is being held
     public int whichLetter;
 
+    //If the component has been placed yet
     private bool canHold = true;
 
+    //The component game object
     public Image box;
 
     public EquationController equation;
 
+    //The box where the equation must be moved to
     public GameObject theBox;
 
+    //Pick up component on mouse down if the component has not been successfully placed yet
     public void OnPointerDown(PointerEventData eventData)
     {
         if(canHold == true)
@@ -29,13 +36,13 @@ public class EquationMover : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         }
     }
 
+    //Release component on mouse up
     public void OnPointerUp(PointerEventData eventData)
     {
         isHolding = false;
 
-
+        //If within the correct box, freeze position and record as in the correct place
         float distance = Vector3.Distance(this.transform.position, theBox.transform.position);
-        print(distance);
         if(distance <= 25)
         {
             this.transform.position = new Vector3(theBox.transform.position.x, theBox.transform.position.y, theBox.transform.position.z);
@@ -62,6 +69,7 @@ public class EquationMover : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         }
     }
 
+    //Move to mouse position if holding component. Maximum and minimums stop component from moving off the page
     private void Update()
     {
         if (isHolding == true)

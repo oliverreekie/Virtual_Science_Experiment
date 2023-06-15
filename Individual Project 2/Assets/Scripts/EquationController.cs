@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class EquationController : MonoBehaviour
 {
-
+    //Each suvat equation image
     public GameObject equation1;
     public GameObject equation2;
     public GameObject equation3;
@@ -13,10 +13,13 @@ public class EquationController : MonoBehaviour
     public GameObject equation5;
     public GameObject green;
 
+    //Whether the user has selected the correct equation
     private bool ifCorrect = false;
 
+    //Stage 2 of the page
     public GameObject stage2;
 
+    //Whether each component has been rearranged successfully yet
     private bool vComplete = false;
     private bool uComplete = false;
     private bool aComplete = false;
@@ -28,6 +31,7 @@ public class EquationController : MonoBehaviour
 
     void Start()
     {
+        //Set all suvat equations to invisible initially
         equation1.SetActive(false);
         equation2.SetActive(false);
         equation3.SetActive(false);
@@ -42,6 +46,7 @@ public class EquationController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //If the user selects the correct answer, show all equation marks
         if(ifCorrect == true)
         {
             equation1.SetActive(true);
@@ -60,7 +65,7 @@ public class EquationController : MonoBehaviour
             closeButton.SetActive(true);
         }
     }
-
+    //Set components as active when successfully rearranged
     public void setVComplete(bool v)
     {
         vComplete = v;

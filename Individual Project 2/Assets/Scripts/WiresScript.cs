@@ -6,8 +6,10 @@ using System;
 
 public class WiresScript : MonoBehaviour
 {
+    //If card is passing through
     private bool running = false;
 
+    //Initially timer value is 0 
     private double timer = 0;
 
     public TextMeshPro uiText;
@@ -16,26 +18,27 @@ public class WiresScript : MonoBehaviour
     {
         if(running == true)
         {
+            //Increment time considering frame rate
             timer += Time.deltaTime;
         }
         else
         {
-            //print(timer);
+            //Print value rounded and to 3 decimal places
             double toPrint = Math.Round((timer * 10), 4);
             uiText.text = toPrint.ToString("0.000");
         }
     }
 
+    //Start timer when card first starts colliding with laser
     private void OnTriggerEnter(Collider other)
     {
-        print("collide");
         running = true;
         timer = 0;
     }
 
+    //Stop timer when card stops colliding with laser
     private void OnTriggerExit(Collider other)
     {
-        print("out");
         running = false;
     }
 }

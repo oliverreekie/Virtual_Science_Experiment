@@ -7,9 +7,10 @@ using TMPro;
 
 public class WelcomeCanvasController : MonoBehaviour
 {
-
+    //The current stage the user is on
     public int stageNumber = 1;
 
+    //Each stage of tutorial
     public GameObject stage1;
     public GameObject stage2;
     public GameObject stage3;
@@ -30,8 +31,10 @@ public class WelcomeCanvasController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Show current stage number to user
         theText.text = stageNumber + " of 5";
 
+        //Show relevent information on stage
         if(stageNumber == 1)
         {
             stage1.SetActive(true);

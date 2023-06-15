@@ -1,0 +1,3676 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class GameMenuButtonController : MonoBehaviour
+{
+    public CanvasController canvasController;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Button btn = this.GetComponent<Button>();
+        btn.onClick.AddListener(TaskOnClick);
+    }
+
+    //Called when the button is clicked
+    void TaskOnClick()
+    {
+        //Checks what button is pressed by accessing the button name
+        if (this.name == "Continue")
+        {
+            //Turns off the menu
+            canvasController.swapMenuState();
+        }
+        else if (this.name == "Tutorial")
+        {
+            //Begins tutorial again
+            canvasController.swapWelcomeState();
+            canvasController.swapMenuState();
+            canvasController.swapHUDState();
+        }
+        else if (this.name == "Settings")
+        {
+            //Opens setting screen
+            canvasController.swapSettingsState();
+        }
+        else if (this.name == "Quit Game")
+        {
+            //Reloads the main menu scene
+            SceneManager.LoadScene(sceneName: "Main_Menu_Scene");
+        }
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class SkipButtonScript : MonoBehaviour
+{
+    public CanvasController canvasController;
+
+    public WelcomeCanvasController welcomeCanvasController;
+
+    public ArrowController arrowController;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Button btn = this.GetComponent<Button>();
+        btn.onClick.AddListener(TaskOnClick);
+    }
+
+    //Called when the button is pressed
+    void TaskOnClick()
+    {
+        //Calls function depending on the button name pressed
+        if(this.name == "Skip Button")
+        {
+            //Finish and close the tutorial
+            canvasController.swapWelcomeState();
+            canvasController.swapHUDState();
+            welcomeCanvasController.stageNumber = 1;
+
+            //If this is the first time the tutorial has ended, show bouncing arrows to guide the user
+            if (arrowController.infoHasOpened == false)
+            {
+                arrowController.arrowInfo.SetActive(true);
+                arrowController.infoHasOpened = true;
+            }
+        }
+        else if(this.name == "Right Arrow")
+        {
+            //Move to next stage of tutorial
+            welcomeCanvasController.stageNumber += 1;
+            if(welcomeCanvasController.stageNumber == 6)
+            {
+                canvasController.swapWelcomeState();
+                canvasController.swapHUDState();
+                welcomeCanvasController.stageNumber = 1;
+                //If this is the first time the tutorial has ended, show bouncing arrows to guide the user
+                if (arrowController.infoHasOpened == false)
+                {
+                    arrowController.arrowInfo.SetActive(true);
+                    arrowController.infoHasOpened = true;
+                }
+            }
+        }
+        else if (this.name == "Left Arrow")
+        {
+            //Move to previous stage of tutorial
+            welcomeCanvasController.stageNumber -= 1;
+            if (welcomeCanvasController.stageNumber == 1)
+            {
+                welcomeCanvasController.stageNumber = 1;
+            }
+        }
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ArrowController : MonoBehaviour
+{
+    //Reference to each of the bouncing arrow objects
+    public GameObject arrowInfo;
+    public GameObject arrowEquation;
+    public GameObject arrowBuild;
+    public GameObject arrowTable;
+    public GameObject arrowGraph;
+    public GameObject arrowFinal;
+
+    //Referenec to the instruction stage of each page
+    public GameObject tableInstructions;
+    public GameObject graphInstructions;
+    public GameObject finalInstructions;
+
+    //Holds whether each page has been opened for the first time yet
+    public bool infoHasOpened = false;
+    public bool equationHasOpened = false;
+    public bool buildHasOpened = false;
+    public bool tableHasOpened = false;
+    public bool graphHasOpened = false;
+    public bool finalHasOpened = false;
+    public bool graphInstructionsHasOpened = false;
+    public bool finalInstructionsHasOpened = false;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Set all arrows to initially closed
+        arrowInfo.SetActive(false);
+        arrowEquation.SetActive(false);
+        arrowBuild.SetActive(false);
+        arrowTable.SetActive(false);
+        arrowGraph.SetActive(false);
+        arrowFinal.SetActive(false);
+
+        //Set all instruction stages for each page to be open
+        tableInstructions.SetActive(true);
+        graphInstructions.SetActive(true);
+        graphInstructions.SetActive(true);
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using System;
+using TMPro;
+
+public class ArrowScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+{
+    //Holds whether the user is currently holding the arror
+    private bool isHolding = false;
+
+    //The text that stores the current ruler value
+    public TextMeshProUGUI distanceText;
+
+    //Location of the arrow
+    private double arrowLocation;
+
+    //Pick up the arrow when the user clicks the mouse
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        isHolding = true;
+    }
+
+    //Drop the arrow when the user releases the mouse
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        isHolding = false;
+    }
+
+    private void Update()
+    {
+        //If the user is holding the arrow
+        if(isHolding == true){
+            //Convert world coordinates to ruler position
+            arrowLocation = Math.Round((this.transform.position.x - 629.3) / 25.582);
+            //Set text to show the arrow location
+            distanceText.text = (arrowLocation.ToString() + "cm");
+
+            //Checks if the arrow is past the ruler, if it is, return it to the ruler
+            if(this.transform.position.x <= 629.3)
+            {
+                this.transform.position = new Vector3((float)629.6, this.transform.position.y, this.transform.position.z);
+            }
+            else if(this.transform.position.x >= 1908.4)
+            {
+                this.transform.position = new Vector3((float)1908.1, this.transform.position.y, this.transform.position.z);
+            }
+            else
+            {
+                this.transform.position = new Vector3(Input.mousePosition.x, this.transform.position.y, this.transform.position.z);
+            }
+        }
+    }
+
+    public double getArrowLocation()
+    {
+        return arrowLocation;
+    }
+
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class AudioController : MonoBehaviour
+{
+    //Audio players for each sound
+    public AudioSource paperFlip;
+    public AudioSource click;
+    public AudioSource whoosh;
+    public AudioSource piano;
+
+    //Whether the special effects is toggled on or off
+    public bool specialIsPlaying;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Start the piano on game load
+        StartPiano();
+        //Initially toggle special effects to on
+        specialIsPlaying = true;
+    }
+
+    //Play paper rustle when user opens or closes a page
+    public void PickUpPaper()
+    {
+        if(specialIsPlaying == true)
+        {
+            paperFlip.Play();
+        }
+    }
+    //Play a click when the user connects an apparatus piece
+    public void AttachClick()
+    {
+        if (specialIsPlaying == true)
+        {
+            click.Play();
+        }
+    }
+    //Play a whoosh when the player drops the card
+    public void StartWhoosh()
+    {
+        if (specialIsPlaying == true)
+        {
+            whoosh.Play();
+        }
+    }
+    //Play and pause the piano background music
+    public void StartPiano()
+    {
+        piano.Play();
+    }
+    public void StopPiano()
+    {
+        piano.Pause();
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BouncingArrow : MonoBehaviour
+{
+    //Whether the arrow is moving up or down
+    private bool up;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        up = false;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Slowly move arrow down
+        if(up == false)
+        {
+            this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y - (float)(1 * Time.deltaTime), this.transform.position.z);
+        }
+        //Slowly move arrow up
+        else
+        {
+            this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + (float)(1 * Time.deltaTime), this.transform.position.z);
+        }
+        //If arrow reaches max or min point, reverse direction
+        if(this.transform.position.y <= 2.3)
+        {
+            up = true;
+        }
+        else if(this.transform.position.y >= 3.0)
+        {
+            up = false;
+        }
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+
+public class BuildState : MonoBehaviour
+{
+    //Sets class as singleton
+    public static BuildState Instance { get; private set; }
+
+    //Holds current state
+    public string buildState = "Info";
+
+    //Refernce to each apparatus stage
+    public GameObject clampStand;
+    public GameObject clampStandLGOFF;
+    public GameObject clampStandLGOFFRuler;
+    public GameObject clampStandLGOFFRulerTimer;
+    public GameObject buildCheck;
+
+    //Holds whether each canvas is open or closed
+    private bool rulerCanvasOpen = false;
+    private bool notesCanvasOpen = false;
+    private bool tableCanvasOpen = false;
+    private bool graphCanvasOpen = false;
+    private bool equationCanvasOpen = false;
+    private bool welcomeCanvasOpen = true;
+    private bool HUDCanvasOpen = true;
+    private bool MenuCanvasOpen = false;
+    private bool InfoCanvasOpen = false;
+    private bool FinalCanvasOpen = false;
+    private bool SettingsCanvasOpen = false;
+
+    //Instruction labels on HUD
+    public TextMeshProUGUI currentGoalLabel;
+    public TextMeshProUGUI mainGoalLabel;
+
+    //Holding the variables entered by the user on the info page
+    public string independentVariable;
+    public string dependentVariable;
+
+    private void Awake()
+    {
+        //Destroy secondary instances of class - for singleton implementation
+        if(Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    public void Update()
+    {
+        //For each stage, display relevent instructions on HUD
+        if(buildState == "Info")
+        {
+            mainGoalLabel.text = "Plan the Experiment";
+            currentGoalLabel.text = "Read the info sheet and fill in variables";
+        }
+        if (buildState == "Equation")
+        {
+            currentGoalLabel.text = "Read the equation sheet and solve the equations";
+        }
+        if (buildState == "Nothing")
+        {
+            mainGoalLabel.text = "Build the Apparatus";
+            currentGoalLabel.text = "Add the clampstand";
+        }
+        if (buildState == "ClampStand")
+        {
+            currentGoalLabel.text = "Add the light gate";
+        }
+        //If the user adds a new apparatus element, delete current state
+        if (buildState == "ClampStand, LGOff")
+        {
+            Destroy(clampStand);
+            currentGoalLabel.text = "Add the ruler";
+        }
+        if (buildState == "Ruler, Clamp, LGOFF")
+        {
+            Destroy(clampStandLGOFF);
+            currentGoalLabel.text = "Add the timer";
+        }
+        if (buildState == "Ruler, Clamp, LGOFF, Timer")
+        {
+            Destroy(clampStandLGOFFRuler);
+            currentGoalLabel.text = "Add the wires";
+        }
+        if (buildState == "Table")
+        {
+            Destroy(clampStandLGOFFRulerTimer);
+            Destroy(buildCheck);
+            mainGoalLabel.text = "Check evaluation sheets";
+            currentGoalLabel.text = "Read the table page";
+        }
+        if (buildState == "Graph")
+        {
+            mainGoalLabel.text = "Check evaluation sheets";
+            currentGoalLabel.text = "Read the graph page";
+        }
+        if (buildState == "Final")
+        {
+            mainGoalLabel.text = "Check evaluation sheets";
+            currentGoalLabel.text = "Check final page";
+        }
+        if (buildState == "Dropping")
+        {
+            mainGoalLabel.text = "Conduct Experiment";
+            currentGoalLabel.text = "Systematically drop card through light gate and record values";
+        }
+    }
+
+    //Getters and setters for each variable
+    public void setBuildState(string s)
+    {
+        buildState = s;
+    }
+
+    public string getBuildState()
+    {
+        return buildState;
+    }
+
+    public void setRulerCanvasOpen(bool b)
+    {
+        rulerCanvasOpen = b;
+    }
+
+    public bool getRulerCanvasOpen()
+    {
+        return rulerCanvasOpen;
+    }
+    public void setNotesCanvasOpen(bool b)
+    {
+        notesCanvasOpen = b;
+    }
+
+    public bool getNotesCanvasOpen()
+    {
+        return notesCanvasOpen;
+    }
+
+    public void setTableCanvasOpen(bool b)
+    {
+        notesCanvasOpen = b;
+    }
+
+    public bool getTableCanvasOpen()
+    {
+        return notesCanvasOpen;
+    }
+
+    public void setGraphCanvasOpen(bool b)
+    {
+        graphCanvasOpen = b;
+    }
+
+    public bool getGraphCanvasOpen()
+    {
+        return graphCanvasOpen;
+    }
+
+    public void setEquationCanvasOpen(bool b)
+    {
+        equationCanvasOpen = b;
+    }
+
+    public bool getEquationCanvasOpen()
+    {
+        return equationCanvasOpen;
+    }
+
+    public void setWelcomeCanvasOpen(bool b)
+    {
+       welcomeCanvasOpen = b;
+    }
+
+    public bool getWelcomeCanvasOpen()
+    {
+        return welcomeCanvasOpen;
+    }
+
+    public void setHUDCanvasOpen(bool b)
+    {
+        HUDCanvasOpen = b;
+    }
+
+    public bool getHUDCanvasOpen()
+    {
+        return HUDCanvasOpen;
+    }
+    public void setMenuCanvasOpen(bool b)
+    {
+        MenuCanvasOpen = b;
+    }
+
+    public bool getMenuCanvasOpen()
+    {
+        return MenuCanvasOpen;
+    }
+    public void setInfoCanvasOpen(bool b)
+    {
+        InfoCanvasOpen = b;
+    }
+
+    public bool getInfoCanvasOpen()
+    {
+        return InfoCanvasOpen;
+    }
+    public void setFinalCanvasOpen(bool b)
+    {
+        FinalCanvasOpen = b;
+    }
+
+    public bool getFinalCanvasOpen()
+    {
+        return FinalCanvasOpen;
+    }
+    public void setSettingsCanvasOpen(bool b)
+    {
+        SettingsCanvasOpen = b;
+    }
+
+    public bool getSettingsCanvasOpen()
+    {
+        return SettingsCanvasOpen;
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CameraAnimation : MonoBehaviour
+{
+    //Max and min values for camera movement
+    private float zMax = 23;
+    private float zMin = 3;
+    //Is the camera moving left or right
+    private bool isRight = true;
+
+    void Update()
+    {
+        //If camera reaches edges, reverse direction
+        if(this.transform.position.z >= 23)
+        {
+            isRight = false;
+        }
+        else if (this.transform.position.z <= 3)
+        {
+            isRight = true;
+        }
+        //Move camera to the right
+        if (isRight == true)
+        {
+            this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z + 1.5f * Time.deltaTime);
+        }
+        //Move camera to the left
+        else
+        {
+            this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z - 1.5f * Time.deltaTime);
+        }
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CanvasController : MonoBehaviour
+{
+    //For each canvas, there is a reference to the canvas and a bool showing whether or not it is open
+    public GameObject rulerCanvas;
+    private bool rulerActive;
+
+    public GameObject notesCanvas;
+    private bool notesActive;
+
+    public GameObject tableCanvas;
+    private bool tableActive;
+
+    public GameObject graphCanvas;
+    private bool graphActive;
+
+    public GameObject equationCanvas;
+    private bool equationActive;
+
+    public GameObject welcomeCanvas;
+    private bool welcomeActive;
+
+    public GameObject HUDCanvas;
+    private bool HUDActive;
+
+    public GameObject MenuCanvas;
+    private bool MenuActive;
+
+    public GameObject InfoCanvas;
+    private bool InfoActive;
+
+    public GameObject FinalCanvas;
+    private bool FinalActive;
+
+    public GameObject SettingsCanvas;
+    private bool SettingsActive;
+
+    //Open buttons for the graph and table
+    public GameObject graphOpenButton;
+    public GameObject tableOpenButton;
+
+    //Is the user drawing a line of best fit
+    public bool isDrawing = false;
+
+    //Are the gradient lines showing
+    public bool isShowingGradient = false;
+
+    //Reference to gradient lines
+    public GameObject gradientLines;
+
+    void Start()
+    {
+        //Initially set all canvases except the welcome canvas to off
+        rulerCanvas.SetActive(false);
+        rulerActive = false;
+
+        notesCanvas.SetActive(false);
+        notesActive = false;
+
+        tableCanvas.SetActive(false);
+        tableActive = false;
+
+        graphCanvas.SetActive(false);
+        graphActive = false;
+
+        equationCanvas.SetActive(false);
+        equationActive = false;
+
+        welcomeCanvas.SetActive(true);
+        welcomeActive = true;
+
+        HUDCanvas.SetActive(false);
+        HUDActive = false;
+
+        MenuCanvas.SetActive(false);
+        MenuActive = false;
+
+        InfoCanvas.SetActive(false);
+        InfoActive = false;
+
+        FinalCanvas.SetActive(false);
+        FinalActive = false;
+
+        SettingsCanvas.SetActive(false);
+        SettingsActive = false;
+
+        gradientLines.SetActive(false);
+    }
+
+    private void Update()
+    {
+        //Open and close notes when the user presses tab
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            swapNotesState();
+        }
+        //Open and close the menu when the user presses escape
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            swapMenuState();
+        }
+        //Functionality for graph close button
+        if(graphCanvas.activeInHierarchy == true)
+        {
+            graphOpenButton.SetActive(false);
+        }
+        else
+        {
+            graphOpenButton.SetActive(true);
+        }
+        //Functionality for table close button
+        if (tableCanvas.activeInHierarchy == true)
+        {
+            tableOpenButton.SetActive(false);
+        }
+        else
+        {
+            tableOpenButton.SetActive(true);
+        }
+        //Show gradient lines if required
+        if(isShowingGradient == true)
+        {
+            gradientLines.SetActive(true);
+        }
+        else
+        {
+            gradientLines.SetActive(false);
+        }
+    }
+
+    //Functions to turn each canvas on and off when called
+
+    public void swapGraphState()
+    {
+        if(graphActive == false)
+        {
+            graphCanvas.SetActive(true);
+            graphActive = true;
+            BuildState.Instance.setGraphCanvasOpen(true);
+        }
+        else
+        {
+            graphCanvas.SetActive(false);
+            graphActive = false;
+            BuildState.Instance.setGraphCanvasOpen(false);
+        }
+    }
+
+    public void swapRulerState()
+    {
+        if (rulerActive == false)
+        {
+            rulerCanvas.SetActive(true);
+            rulerActive = true;
+            BuildState.Instance.setRulerCanvasOpen(true);
+        }
+        else
+        {
+            rulerCanvas.SetActive(false);
+            rulerActive = false;
+            BuildState.Instance.setRulerCanvasOpen(false);
+        }
+    }
+    public void swapNotesState()
+    {
+        if (notesActive == false)
+        {
+            notesCanvas.SetActive(true);
+            notesActive = true;
+            BuildState.Instance.setNotesCanvasOpen(true);
+        }
+        else
+        {
+            notesCanvas.SetActive(false);
+            notesActive = false;
+            BuildState.Instance.setNotesCanvasOpen(false);
+        }
+    }
+    public void swapTableState()
+    {
+        if (tableActive == false)
+        {
+            tableCanvas.SetActive(true);
+            tableActive = true;
+            BuildState.Instance.setTableCanvasOpen(true);
+        }
+        else
+        {
+            tableCanvas.SetActive(false);
+            tableActive = false;
+            BuildState.Instance.setTableCanvasOpen(false);
+        }
+    }
+
+    public void swapEquationState()
+    {
+        if (equationActive == false)
+        {
+            equationCanvas.SetActive(true);
+            equationActive = true;
+            BuildState.Instance.setEquationCanvasOpen(true);
+        }
+        else
+        {
+            equationCanvas.SetActive(false);
+            equationActive = false;
+            BuildState.Instance.setEquationCanvasOpen(false);
+        }
+    }
+
+    public void swapWelcomeState()
+    {
+        if (welcomeActive == false)
+        {
+            welcomeCanvas.SetActive(true);
+            welcomeActive = true;
+            BuildState.Instance.setWelcomeCanvasOpen(true);
+        }
+        else
+        {
+            welcomeCanvas.SetActive(false);
+            welcomeActive = false;
+            BuildState.Instance.setWelcomeCanvasOpen(false);
+        }
+    }
+
+    public void swapHUDState()
+    {
+        if (HUDActive == false)
+        {
+            HUDCanvas.SetActive(true);
+            HUDActive = true;
+            BuildState.Instance.setHUDCanvasOpen(true);
+        }
+        else
+        {
+            HUDCanvas.SetActive(false);
+            HUDActive = false;
+            BuildState.Instance.setHUDCanvasOpen(false);
+        }
+    }
+    public void swapMenuState()
+    {
+        if (MenuActive == false)
+        {
+            MenuCanvas.SetActive(true);
+            MenuActive = true;
+            BuildState.Instance.setMenuCanvasOpen(true);
+        }
+        else
+        {
+            MenuCanvas.SetActive(false);
+            MenuActive = false;
+            BuildState.Instance.setMenuCanvasOpen(false);
+        }
+    }
+    public void swapInfoState()
+    {
+        if (InfoActive == false)
+        {
+            InfoCanvas.SetActive(true);
+            InfoActive = true;
+            BuildState.Instance.setInfoCanvasOpen(true);
+        }
+        else
+        {
+            InfoCanvas.SetActive(false);
+            InfoActive = false;
+            BuildState.Instance.setInfoCanvasOpen(false);
+        }
+    }
+    public void swapFinalState()
+    {
+        if (FinalActive == false)
+        {
+            FinalCanvas.SetActive(true);
+            FinalActive = true;
+            BuildState.Instance.setFinalCanvasOpen(true);
+        }
+        else
+        {
+            FinalCanvas.SetActive(false);
+            FinalActive = false;
+            BuildState.Instance.setFinalCanvasOpen(false);
+        }
+    }
+    public void swapSettingsState()
+    {
+        if (SettingsActive == false)
+        {
+            SettingsCanvas.SetActive(true);
+            SettingsActive = true;
+            BuildState.Instance.setSettingsCanvasOpen(true);
+        }
+        else
+        {
+            SettingsCanvas.SetActive(false);
+            SettingsActive = false;
+            BuildState.Instance.setSettingsCanvasOpen(false);
+        }
+    }
+
+    //Getters for whether each canvas is open or not
+    public bool getRulerActive()
+    {
+        return rulerActive;
+    }
+    public bool getNotesActive()
+    {
+        return notesActive;
+    }
+    public bool getTableActive()
+    {
+        return tableActive;
+    }
+    public bool getGraphActive()
+    {
+        return graphActive;
+    }
+    public bool getEquationActive()
+    {
+        return equationActive;
+    }
+    public bool getWelcomeActive()
+    {
+        return welcomeActive;
+    }
+    public bool getHUDActive()
+    {
+        return HUDActive;
+    }
+    public bool getMenuActive()
+    {
+        return MenuActive;
+    }
+    public bool getInfoActive()
+    {
+        return InfoActive;
+    }
+    public bool getFinalActive()
+    {
+        return FinalActive;
+    }
+    public bool getSettingsActive()
+    {
+        return SettingsActive;
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class CloseButtonController : MonoBehaviour
+{
+    //The button being pressed
+    public Button theButton;
+
+    public CanvasController canvasController;
+
+    public ArrowController arrowController;
+
+    public Text theText;
+
+    //Variables entered in the info page
+    public TMP_InputField independantField;
+    public TMP_InputField dependantField;
+
+    public AudioController audioController;
+
+    void Start()
+    {
+        //Set up button listener
+        theButton.onClick.AddListener(TaskOnClick);
+    }
+
+    void TaskOnClick()
+    {
+        if(this.name == "Table Close Button")
+        {
+            canvasController.swapTableState();
+            //If this is the first time being opened, stop the table arrow and start the graph arrow
+            if (arrowController.graphHasOpened == false)
+            {
+                arrowController.arrowGraph.SetActive(true);
+                arrowController.graphHasOpened = true;
+                BuildState.Instance.buildState = "Graph";
+                arrowController.tableInstructions.SetActive(false);
+            }
+            //Play paper rustle
+            audioController.PickUpPaper();
+        }
+        else if(this.name == "Graph Close Button")
+        {
+            //If this is the first time being opened, stop the graph arrow and start the final arrow
+            if (arrowController.graphInstructionsHasOpened == false)
+            {
+                arrowController.graphInstructions.SetActive(false);
+                arrowController.graphInstructionsHasOpened = true;
+                BuildState.Instance.buildState = "Final";
+                arrowController.arrowFinal.SetActive(true);
+            }
+
+            canvasController.swapGraphState();
+            //Play paper rustle
+            audioController.PickUpPaper();
+        }
+        else if (this.name == "Final Close Button")
+        {
+            //If this is the first time being opened, stop the final arrow
+            if (arrowController.finalHasOpened == false)
+            {
+                arrowController.finalHasOpened = true;
+                BuildState.Instance.buildState = "Dropping";
+                arrowController.arrowFinal.SetActive(false);
+                arrowController.finalInstructions.SetActive(false);
+            }
+            canvasController.swapFinalState();
+            //Play paper rustle
+            audioController.PickUpPaper();
+        }
+        else if (this.name == "Info Close Button")
+        {
+            //Save the independent and dependent variables to buildstate
+            BuildState.Instance.independentVariable = independantField.text;
+            BuildState.Instance.dependentVariable = dependantField.text;
+
+            canvasController.swapInfoState();
+            //If this is the first time being opened, show the equation arrow
+            if (arrowController.equationHasOpened == false)
+            {
+                arrowController.arrowEquation.SetActive(true);
+                arrowController.equationHasOpened = true;
+                BuildState.Instance.buildState = "Equation";
+            }
+            //Play paper rustle
+            audioController.PickUpPaper();
+        }
+        else if (this.name == "Equation Close Button")
+        {
+            //If this is the first time being opened, show the build arrow
+            canvasController.swapEquationState();
+            if (arrowController.buildHasOpened == false)
+            {
+                arrowController.arrowBuild.SetActive(true);
+                arrowController.buildHasOpened = true;
+                BuildState.Instance.buildState = "Nothing";
+            }
+            //Play paper rustle
+            audioController.PickUpPaper();
+        }
+        //Close the graph
+        else if(this.name == "Open Graph Button")
+        {
+            canvasController.swapGraphState();
+        }
+        //Close the table
+        else if (this.name == "Open Table Button")
+        {
+            canvasController.swapTableState();
+        }
+        //If drawing, stop drawing regression line. Else, start drawing line
+        else if (this.name == "Draw Line Button")
+        {
+            if(canvasController.isDrawing == true)
+            {
+                canvasController.isDrawing = false;
+                theText.text = "Start Drawing Line";
+            }
+            else
+            {
+                canvasController.isDrawing = true;
+                theText.text = "Stop Drawing Line";
+            }
+        }
+        //If showing the gradient lines, stop, else show it
+        else if (this.name == "Gradient Line Button")
+        {
+            if (canvasController.isShowingGradient == true)
+            {
+                canvasController.isShowingGradient = false;
+                theText.text = "Show";
+            }
+            else
+            {
+                canvasController.isShowingGradient = true;
+                theText.text = "Hide";
+            }
+        }
+        //Close settings page
+        else if (this.name == "Settings Close Button")
+        {
+            canvasController.swapSettingsState();
+        }
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class DropButtonScript : MonoBehaviour
+{
+    public ArrowScript arrowScript;
+
+    public GameObject weightedCard;
+
+    public CanvasController rulerController;
+
+    public PickUp weightedCardPickUp;
+
+    void Start()
+    {
+        //Set up button
+        Button btn = this.GetComponent<Button>();
+        btn.onClick.AddListener(TaskOnClick);
+    }
+
+    void TaskOnClick()
+    {
+        //Set position to transform card to
+        double toDropY = (0.01989 * arrowScript.getArrowLocation()) + 2.7602;
+        //Set position and rotation
+        weightedCard.transform.position = new Vector3((float)-5.196, (float)toDropY, (float)5.538);
+        weightedCard.transform.rotation = new Quaternion(-90, -90, 0, 0);
+        //Close ruler and drop card
+        rulerController.swapRulerState();
+        weightedCardPickUp.droppingCardFromRuler();
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class EquationController : MonoBehaviour
+{
+    //Each suvat equation image
+    public GameObject equation1;
+    public GameObject equation2;
+    public GameObject equation3;
+    public GameObject equation4;
+    public GameObject equation5;
+    public GameObject green;
+
+    //Whether the user has selected the correct equation
+    private bool ifCorrect = false;
+
+    //Stage 2 of the page
+    public GameObject stage2;
+
+    //Whether each component has been rearranged successfully yet
+    private bool vComplete = false;
+    private bool uComplete = false;
+    private bool aComplete = false;
+    private bool sComplete = false;
+
+    public GameObject finalText;
+
+    public GameObject closeButton;
+
+    void Start()
+    {
+        //Set all suvat equations to invisible initially
+        equation1.SetActive(false);
+        equation2.SetActive(false);
+        equation3.SetActive(false);
+        equation4.SetActive(false);
+        equation5.SetActive(false);
+        green.SetActive(false);
+        stage2.SetActive(false);
+        finalText.SetActive(false);
+        closeButton.SetActive(false);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //If the user selects the correct answer, show all equation marks
+        if(ifCorrect == true)
+        {
+            equation1.SetActive(true);
+            equation2.SetActive(true);
+            equation3.SetActive(true);
+            equation4.SetActive(true);
+            equation5.SetActive(true);
+            green.SetActive(true);
+            stage2.SetActive(true);
+
+        }
+
+        if(getAreAllComplete() == true)
+        {
+            finalText.SetActive(true);
+            closeButton.SetActive(true);
+        }
+    }
+    //Set components as active when successfully rearranged
+    public void setVComplete(bool v)
+    {
+        vComplete = v;
+    }
+    public void setUComplete(bool v)
+    {
+        uComplete = v;
+    }
+    public void setAComplete(bool v)
+    {
+        aComplete = v;
+    }
+    public void setSComplete(bool v)
+    {
+        sComplete = v;
+    }
+
+    public bool getAreAllComplete()
+    {
+        if (vComplete == true && uComplete == true && aComplete == true && sComplete == true)
+        {
+            return true;
+        }
+        else return false;
+    }
+
+    public void setIfCorrect(bool b)
+    {
+        ifCorrect = b;
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+
+public class EquationMover : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+{
+    //Whether the user is holding the component
+    private bool isHolding = false;
+
+    //Location of component
+    private double arrowLocation;
+
+    //Which component is being held
+    public int whichLetter;
+
+    //If the component has been placed yet
+    private bool canHold = true;
+
+    //The component game object
+    public Image box;
+
+    public EquationController equation;
+
+    //The box where the equation must be moved to
+    public GameObject theBox;
+
+    //Pick up component on mouse down if the component has not been successfully placed yet
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if(canHold == true)
+        {
+            isHolding = true;
+        }
+    }
+
+    //Release component on mouse up
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        isHolding = false;
+
+        //If within the correct box, freeze position and record as in the correct place
+        float distance = Vector3.Distance(this.transform.position, theBox.transform.position);
+        if(distance <= 25)
+        {
+            this.transform.position = new Vector3(theBox.transform.position.x, theBox.transform.position.y, theBox.transform.position.z);
+            canHold = false;
+
+            box.color = new Color32(0, 161, 65, 255);
+
+            if(this.name == "v")
+            {
+               equation.setVComplete(true);
+            }
+            else if(this.name == "u")
+            {
+                equation.setUComplete(true);
+            }
+            else if (this.name == "s")
+            {
+                equation.setSComplete(true);
+            }
+            else if (this.name == "a")
+            {
+                equation.setAComplete(true);
+            }
+        }
+    }
+
+    //Move to mouse position if holding component. Maximum and minimums stop component from moving off the page
+    private void Update()
+    {
+        if (isHolding == true)
+        {
+            if (this.transform.position.x <= 143)
+            {
+                this.transform.position = new Vector3((float)143.5, Input.mousePosition.y, this.transform.position.z);
+            }
+            else if (this.transform.position.x >= 2371)
+            {
+                this.transform.position = new Vector3((float)2370.5, Input.mousePosition.y, this.transform.position.z);
+            }
+
+            else if (this.transform.position.y >= 1292)
+            {
+                this.transform.position = new Vector3(Input.mousePosition.x, (float)1291.5, this.transform.position.z);
+            }
+            else if (this.transform.position.y <= 160)
+            {
+                this.transform.position = new Vector3(Input.mousePosition.x, (float)160.5, this.transform.position.z);
+            }
+            else
+            {
+                this.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, this.transform.position.z);
+            }
+        }
+
+    }
+
+    public double getArrowLocation()
+    {
+        return arrowLocation;
+    }
+
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class EquationSelector : MonoBehaviour
+{
+    //Equation controller
+    public EquationController equationController;
+
+    //Equation component
+    public GameObject equationToSet;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Set up button listener
+        Button btn = this.GetComponent<Button>();
+        btn.onClick.AddListener(TaskOnClick);
+    }
+
+    void TaskOnClick()
+    {
+        //Set as correct when clicked
+        equationToSet.SetActive(true);
+        if(this.name == "Green SUVAT 3")
+        {
+            equationController.setIfCorrect(true);
+        }
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class GradientLines : MonoBehaviour
+{
+    //The start and end of the ui line renderer line
+    public Vector2 firstCoordinate;
+    public Vector2 secondCoordinate;
+
+    public UILineRenderer uiLineRenderer;
+
+    //Showing the location of the x axis
+    public GameObject xAxisMarker;
+
+    //Each of the line images
+    public Image largeX;
+    public Image smallX;
+
+    public Image largeY;
+    public Image smallY;
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Set coordinates to start and end of ui line renderer line
+        firstCoordinate = uiLineRenderer.points[0];
+        secondCoordinate = uiLineRenderer.points[1];
+
+        //Transform each image to the correct location and size
+        largeX.rectTransform.sizeDelta = new Vector2(10, secondCoordinate.y + 406);
+        largeX.transform.position = new Vector3(secondCoordinate.x + (1188 + 5 + 650), xAxisMarker.transform.position.y + (secondCoordinate.y + 406) / 2, this.transform.position.z);
+
+        smallX.rectTransform.sizeDelta = new Vector2(10, firstCoordinate.y + 406);
+        smallX.transform.position = new Vector3(firstCoordinate.x + (1188 + 5 + 650), xAxisMarker.transform.position.y + (firstCoordinate.y + 406) / 2, this.transform.position.z);
+
+        largeY.rectTransform.sizeDelta = new Vector2((secondCoordinate.x + 640) / 2, 10);
+        largeY.transform.position = new Vector3(xAxisMarker.transform.position.x + (secondCoordinate.x + 640) / 2,secondCoordinate.y + 905 , this.transform.position.z);
+
+        smallY.rectTransform.sizeDelta = new Vector2((firstCoordinate.x + 640) / 2, 10);
+        smallY.transform.position = new Vector3(xAxisMarker.transform.position.x + (firstCoordinate.x + 640) / 2, firstCoordinate.y + 905, this.transform.position.z);
+
+
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using System.Linq;
+
+public class GradingSystem : MonoBehaviour
+{
+    //Whether the user has entered a gradient
+    private bool hasPressedEnter;
+
+    //Fields to hold the user input of the difference in y and x values
+    public TMP_InputField xDifference;
+    public TMP_InputField yDifference;
+
+    //Enter and submit buttons
+    public Button enterButton;
+    public Button submitButton;
+
+    //Label for each gradient
+    public TextMeshProUGUI gradient1;
+    public TextMeshProUGUI gradient2;
+
+    //Holds stage 1 (before the user submits their work) and stage 2 (where the marks are given out)
+    public GameObject stage1;
+    public GameObject stage2;
+
+    //Label for each mark to be awarded
+    public TextMeshProUGUI independentLabel;
+    public TextMeshProUGUI dependentLabel;
+    public TextMeshProUGUI graphLabelsLabel;
+    public TextMeshProUGUI tableUnitsLabel;
+    public TextMeshProUGUI gravityLabel;
+    public TextMeshProUGUI gridLineLabelsLabel;
+    public TextMeshProUGUI blankTableLabel;
+    public TextMeshProUGUI lineOfBestFitGradient;
+    public TextMeshProUGUI totalMark;
+    public TextMeshProUGUI timer;
+
+    //Graph Axis Locators
+    public Image axisMarkerBotttomLeft;
+    public Image axisMarkerTopRight;
+    public Image axisMarkerUnderGraph;
+
+    public GradingTracker gradingTracker;
+
+    //User entered gravity value
+    private float gravityValue;
+
+    //Overall mark awarded
+    private int mark;
+
+    //Grade Images
+    public GameObject gradeA;
+    public GameObject gradeB;
+    public GameObject gradeC;
+    public GameObject gradeD;
+    public GameObject gradeE;
+
+    public OverallTimerScript overallTimer;
+
+    //Label to show error that no gradient has been entered when submitting
+    public GameObject noGradientWarning;
+
+    //Feedback section
+    public GameObject fullMarks;
+    public GameObject notFullMarks;
+    public TextMeshProUGUI feedback;
+
+    //Mark per section
+    private int independentVariableMark = 0;
+    private int dependentVariableMark = 0;
+    private int graphLabelsMark = 0;
+    private int tableUnitsMark = 0;
+    private int gravityMark = 0;
+    private int gridLineLabelsMark = 0;
+    private int blankTableMark = 0;
+    private int lineOfBestFitGradientMark = 0;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Set up button listeners
+        enterButton.onClick.AddListener(TaskOnClick);
+        submitButton.onClick.AddListener(TaskOnClickSubmit);
+
+        //Set initial stage states
+        stage1.SetActive(true);
+        stage2.SetActive(false);
+
+        //Whether the user has pressed enter
+        hasPressedEnter = false;
+
+        //Initially all grade images are closed
+        gradeA.SetActive(false);
+        gradeB.SetActive(false);
+        gradeC.SetActive(false);
+        gradeD.SetActive(false);
+        gradeE.SetActive(false);
+
+        //To open if the user tries to submit without a gradient
+        noGradientWarning.SetActive(false);
+
+        //Set full marks labels to closed
+        fullMarks.SetActive(false);
+        notFullMarks.SetActive(false);
+    }
+
+    //When the user presses the enter button
+    void TaskOnClick()
+    {
+        //If the inputfields are not empty
+        if(xDifference.text != "" && yDifference.text != "")
+        {
+            float x = float.Parse(xDifference.text);
+            float y = float.Parse(yDifference.text);
+
+            //Calulate g from difference in y and x
+            float g = x / y;
+
+            gradient1.text = g.ToString();
+            gradient2.text = g.ToString();
+
+            gravityValue = g;
+
+            hasPressedEnter = true;
+
+            noGradientWarning.SetActive(false);
+        }
+        //Show warning that gravity value was entered incorrectly
+        else
+        {
+            noGradientWarning.SetActive(true);
+        }
+    }
+
+    //If the user presses the submit button
+    void TaskOnClickSubmit()
+    {
+        //If gravity value has been submitted
+        if(hasPressedEnter == true)
+        {
+            //Close stage 1 and open stage 2
+            stage1.SetActive(false);
+            stage2.SetActive(true);
+
+            //Run marking functions
+            CheckVariables();
+            CheckGraphLabels();
+            CheckGraphHeaders();
+            CheckGravityValue();
+            CheckGraphLineLabels();
+            CheckEmptyFields();
+            CheckLineGradient();
+            SetTotal();
+
+            //Show timer text on screen
+            timer.text = overallTimer.timerValue;
+
+            //If full marks display full marks screen
+            if(mark == 43)
+            {
+                fullMarks.SetActive(true);
+            }
+            //Otherwise show feedback
+            else
+            {
+                notFullMarks.SetActive(true);
+
+                GiveFeedback();
+            }
+        }
+    }
+
+    //Checks that the independent and dependent variables were entered correctly
+    private void CheckVariables()
+    {
+        //Checks variations of the same word to account for different ways of saying it
+        if(BuildState.Instance.independentVariable.Contains("Distance") || 
+            BuildState.Instance.independentVariable.Contains("distance") || 
+            BuildState.Instance.independentVariable == "d" || 
+            BuildState.Instance.independentVariable == "D" ||
+            BuildState.Instance.independentVariable.Contains("(D)") ||
+            BuildState.Instance.independentVariable.Contains("(d)"))
+        {
+            //Awards marks accordingly
+            independentLabel.text = "5/5";
+            independentVariableMark = 5;
+            mark += 5;
+        }
+        else if(BuildState.Instance.independentVariable.Contains("Height") ||
+            BuildState.Instance.independentVariable.Contains("height") ||
+            BuildState.Instance.independentVariable == "h" ||
+            BuildState.Instance.independentVariable == "H" ||
+            BuildState.Instance.independentVariable.Contains("(H)") ||
+            BuildState.Instance.independentVariable.Contains("(h)"))
+        {
+            independentLabel.text = "3/5";
+            independentVariableMark = 3;
+            mark += 3;
+        }
+        else
+        {
+            independentLabel.text = "0/5";
+        }
+
+        if (BuildState.Instance.dependentVariable.Contains("Velocity") || 
+            BuildState.Instance.dependentVariable.Contains("velocity") || 
+            BuildState.Instance.dependentVariable == "v" || 
+            BuildState.Instance.dependentVariable == "V"||
+            BuildState.Instance.dependentVariable.Contains("(V)") ||
+            BuildState.Instance.dependentVariable.Contains("(v)") ||
+            BuildState.Instance.dependentVariable.Contains("Time") || 
+            BuildState.Instance.dependentVariable.Contains("time") || 
+            BuildState.Instance.dependentVariable == "t" || 
+            BuildState.Instance.dependentVariable == "T" ||
+            BuildState.Instance.dependentVariable.Contains("(T)") ||
+            BuildState.Instance.dependentVariable.Contains("(t)"))
+        {
+            dependentLabel.text = "5/5";
+            dependentVariableMark = 5;
+            mark += 5;
+        }
+        else if (BuildState.Instance.dependentVariable.Contains("Speed") ||
+            BuildState.Instance.dependentVariable.Contains("speed") ||
+            BuildState.Instance.dependentVariable == "s" ||
+            BuildState.Instance.dependentVariable == "S" ||
+            BuildState.Instance.dependentVariable.Contains("(S)") ||
+            BuildState.Instance.dependentVariable.Contains("(s)"))
+        {
+            dependentLabel.text = "3/5";
+            dependentVariableMark = 3;
+            mark += 3;
+        }
+        else
+        {
+            dependentLabel.text = "0/5";
+        }
+    }
+
+    //Checks whether the graph was labelled correctly
+    private void CheckGraphLabels()
+    {
+        //Keeps track of mark awarded so far
+        int score = 0;
+        int counter = 0;
+        for(int i = 0; i < gradingTracker.graphLabels.Count; i++)
+        {
+            if(gradingTracker.graphLabels[i].transform.position.y >= axisMarkerTopRight.transform.position.y)
+            {
+                //If there is a title label, give two marks
+                if(gradingTracker.graphLabels[i].GetComponent<InputField>().text != "")
+                {
+                    score += 2;
+                    counter += 1;
+                }
+            }
+            //Checks Y axis label
+            else if (gradingTracker.graphLabels[i].transform.position.x <= axisMarkerBotttomLeft.transform.position.x)
+            {
+                //Checks with variations of the same word to account for different ways of saying it
+                if (gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("Speed") || 
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("speed") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text == "s" ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text == "S" ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("(s)") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("(S)"))
+                {
+                    score += 1;
+                    counter += 1;
+                }
+                else if (gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("Velocity") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("velocity") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text == "v" ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text == "V" ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("(V)") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("(v)"))
+                {
+                    score += 2;
+                    counter += 1;
+                }
+            }
+            //Checks X axis label
+            else if(gradingTracker.graphLabels[i].transform.position.y <= axisMarkerBotttomLeft.transform.position.y && gradingTracker.graphLabels[i].transform.position.y >= axisMarkerUnderGraph.transform.position.y)
+            {
+                //Checks with variations of the same word to account for different ways of saying it
+                if (gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("Height") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("height") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text == "h" ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text == "H" ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("(H)") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("(h)"))
+                {
+                    score += 1;
+                    counter += 1;
+                }
+                else if (gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("Distance") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("distance") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text == "d" ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text == "D" ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("(D)") ||
+                    gradingTracker.graphLabels[i].GetComponent<InputField>().text.Contains("(d)"))
+                {
+                    score += 2;
+                    counter += 1;
+                }
+            }
+            //Only checks the first three relevent fields
+            if(counter >= 3)
+            {
+                break;
+            }
+          
+        }
+        //Awards mark accordingly
+        mark += score;
+        graphLabelsMark = score;
+        graphLabelsLabel.text = score + "/6"; 
+    }
+
+    //Checks the table has correct units in header
+    private void CheckGraphHeaders()
+    {
+        int unitMarks = 0;
+        int count = 0;
+
+        for(int i = 0; i < gradingTracker.graphHeaders.Count; i++)
+        {
+            //Awards marks for each relevent header
+            if(gradingTracker.graphHeaders[i].text.Contains("(s)"))
+            {
+                unitMarks += 2;
+            }
+            else if(gradingTracker.graphHeaders[i].text.Contains("(m/s)"))
+            {
+                unitMarks += 2;
+            } 
+            else if (gradingTracker.graphHeaders[i].text.Contains("(m)"))
+            {
+                unitMarks += 2;
+            }
+            else if (gradingTracker.graphHeaders[i].text.Contains("(cm)"))
+            {
+                unitMarks += 1;
+            }
+
+            count += 1;
+
+            if (count >= 6)
+            {
+                break;
+            }
+        }
+
+        //Gives marks accordingly
+        mark += unitMarks / 2;
+        tableUnitsLabel.text = (unitMarks / 2) + "/6";
+        tableUnitsMark = unitMarks / 2;
+
+    }
+
+    //Compares calculated gravity value against real value
+    private void CheckGravityValue()
+    {
+        //5 marks available, but 1 removed for every integer value discrepency in values
+        if(gravityValue >= 9 && gravityValue <= 10)
+        {
+            gravityLabel.text = "5/5";
+            mark += 5;
+            gravityMark = 5;
+        }
+        else if((gravityValue >= 8 && gravityValue <= 9) || (gravityValue >= 10 && gravityValue <= 11))
+        {
+            gravityLabel.text = "4/5";
+            mark += 4;
+            gravityMark = 4;
+        }
+        else if ((gravityValue >= 7 && gravityValue <= 8) || (gravityValue >= 11 && gravityValue <= 12))
+        {
+            gravityLabel.text = "3/5";
+            mark += 3;
+            gravityMark = 3;
+        }
+        else if ((gravityValue >= 6 && gravityValue <= 7) || (gravityValue >= 12 && gravityValue <= 13))
+        {
+            gravityLabel.text = "2/5";
+            mark += 2;
+            gravityMark = 2;
+        }
+        else if ((gravityValue >= 5 && gravityValue <= 5) || (gravityValue >= 13 && gravityValue <= 14))
+        {
+            gravityLabel.text = "1/5";
+            mark += 1;
+            gravityMark = 1;
+        }
+        else
+        {
+            gravityLabel.text = "0/5";
+        }
+    }
+
+    //Checks the graph lines are labelled with consistent scale
+    private void CheckGraphLineLabels()
+    {
+        //Holds current mark awarded
+        int marks = 0;
+
+        //Create lists to be manipulated
+        List<GameObject> yAxisLabels = new List<GameObject>();
+        List<GameObject> xAxisLabels = new List<GameObject>();
+
+        //Create lists of all the x axis labels and y axis labels
+        for (int i = 0; i < gradingTracker.graphLineLabels.Count; i++)
+        {
+            if(gradingTracker.graphLineLabels[i].transform.position.x <= axisMarkerBotttomLeft.transform.position.x)
+            {
+                yAxisLabels.Add(gradingTracker.graphLineLabels[i]);
+            }
+            else
+            {
+                if(gradingTracker.graphLineLabels[i].transform.position.y >= axisMarkerUnderGraph.transform.position.y)
+                {
+                    xAxisLabels.Add(gradingTracker.graphLineLabels[i]);
+                }
+            }
+        }
+
+        //Remove from list if inputfield is empty
+        yAxisLabels.RemoveAll(x => x.GetComponent<TMP_InputField>().text == "");
+        xAxisLabels.RemoveAll(x => x.GetComponent<TMP_InputField>().text == "");
+
+        //Sorting by position
+        yAxisLabels = yAxisLabels.OrderBy(yAxisLabels => yAxisLabels.transform.position.y).ToList();
+        xAxisLabels = xAxisLabels.OrderBy(xAxisLabels => xAxisLabels.transform.position.x).ToList();
+
+        //Check if increasing linearly
+        bool linearCheckY = true;
+        float linearHolderY = 0;
+
+        for(int i = 0; i < yAxisLabels.Count - 1; i++)
+        {
+            float diff = float.Parse(yAxisLabels[i + 1].GetComponent<TMP_InputField>().text) - float.Parse(yAxisLabels[i].GetComponent<TMP_InputField>().text);
+
+            if (i == 0)
+            {
+                linearHolderY = diff;
+            }
+            else
+            {
+                if(diff != linearHolderY)
+                {
+                    linearCheckY = false;
+                    break;
+                }
+            }
+        }
+
+        //Check if increasing linearly
+        bool linearCheckX = true;
+        float linearHolderX = 0;
+
+        for (int i = 0; i < xAxisLabels.Count - 1; i++)
+        {
+            float diff = float.Parse(xAxisLabels[i + 1].GetComponent<TMP_InputField>().text) 
+                - float.Parse(xAxisLabels[i].GetComponent<TMP_InputField>().text);
+
+            if (i == 0)
+            {
+                linearHolderX = diff;
+            }
+            else
+            {
+                if (diff != linearHolderX)
+                {
+                    linearCheckX = false;
+                    break;
+                }
+            }
+        }
+
+        //Check if increasing exponentially
+        bool expCheckY = true;
+        float expHolderY = 0;
+
+        for (int i = 0; i < yAxisLabels.Count - 1; i++)
+        {
+            float diff = float.Parse(yAxisLabels[i + 1].GetComponent<TMP_InputField>().text) 
+                / float.Parse(yAxisLabels[i].GetComponent<TMP_InputField>().text);
+
+            if (i == 0)
+            {
+                expHolderY = diff;
+            }
+            else
+            {
+                if (diff != expHolderY)
+                {
+                    expCheckY = false;
+                    break;
+                }
+            }
+        }
+
+        //Check if increasing exponentially
+        bool expCheckX = true;
+        float expHolderX = 0;
+
+        for (int i = 0; i < xAxisLabels.Count - 1; i++)
+        {
+            float diff = float.Parse(xAxisLabels[i + 1].GetComponent<TMP_InputField>().text) / float.Parse(xAxisLabels[i].GetComponent<TMP_InputField>().text);
+
+            if (i == 0)
+            {
+                expHolderX = diff;
+            }
+            else
+            {
+                if (diff != expHolderX)
+                {
+                    expCheckX = false;
+                    break;
+                }
+            }
+        }
+        //Give 1 mark for there being at list 3 axis labels per axis
+        if(yAxisLabels.Count > 2)
+        {
+            marks += 1;
+
+            //Give Y axis mark
+            if (linearCheckY || expCheckY)
+            {
+                marks += 2;
+            }
+        }
+
+        if(xAxisLabels.Count > 2)
+        {
+            marks += 1;
+
+            //Give X axis mark
+            if (linearCheckX || expCheckX)
+            {
+                marks += 2;
+            }
+        }
+
+        //Award marks accordingly
+        mark += marks;
+        gridLineLabelsLabel.text = marks + "/6";
+        gridLineLabelsMark = marks;
+
+    }
+
+    //Check the table does not contain empty fields
+    private void CheckEmptyFields()
+    {
+        //Marks available
+        int marks = 5;
+
+        //Loop through all fields and remove a mark for every empty field
+        for(int i = 0; i < gradingTracker.allTableFields.Count; i++)
+        {
+            if(gradingTracker.allTableFields[i].text == "")
+            {
+                marks -= 1;
+            }
+        }
+
+        //Minimum marks are zero
+        if(marks <= 0)
+        {
+            marks = 0;
+        }
+
+        //Award marks accordingly
+        mark += marks;
+        blankTableLabel.text = marks + "/5";
+        blankTableMark = marks;
+    }
+
+    //Checks the line gradient against points provided
+    private void CheckLineGradient()
+    {
+        //Create a new list
+        List<GameObject> graphPointsOnGraph = new List<GameObject>();
+
+        //Create a list of all the graph points that are currently on the graph
+        for (int i = 0; i < gradingTracker.graphPoints.Count; i++)
+        {
+            if (gradingTracker.graphPoints[i] != null)
+            {
+                if (gradingTracker.graphPoints[i].transform.position.y >= axisMarkerBotttomLeft.transform.position.y)
+                {
+                    graphPointsOnGraph.Add(gradingTracker.graphPoints[i]);
+                }
+            }
+
+        }
+        //Variables to hold means
+        double meanX = 0;
+        double meanY = 0;
+
+        //Variables to hold differences to sum
+        double xAndYDifference = 0;
+        double xSquared = 0;
+
+        //Calculate mean of each coordinate
+        for (int i = 0; i < graphPointsOnGraph.Count; i++)
+        {
+            meanX += graphPointsOnGraph[i].transform.position.x;
+            meanY += graphPointsOnGraph[i].transform.position.y;
+        }
+
+        meanX = meanX / graphPointsOnGraph.Count;
+        meanY = meanY / graphPointsOnGraph.Count;
+
+        //Calculate components using the least squares method
+        for (int i = 0; i < graphPointsOnGraph.Count; i++)
+        {
+            double xDiff = (graphPointsOnGraph[i].transform.position.x - meanX);
+            double yDiff = (graphPointsOnGraph[i].transform.position.y - meanY);
+
+            xAndYDifference += (xDiff * yDiff);
+            xSquared += (xDiff * xDiff);
+        }
+
+        //Sum and average the values from the least squares method
+        double gradientPrediction = xAndYDifference / xSquared;
+
+        //Calculate percentage difference between user calculated gradient and perfect
+        double gradientsDifference = (gradientPrediction / gradingTracker.calculatedGradient) * 100;
+
+        //5 marks initially available. Remove 1 mark for every 10 percent discrepancy between user gradient and perfect gradient
+        if (gradientsDifference <= 110 && gradientsDifference > 90)
+        {
+            lineOfBestFitGradientMark = 5;
+        }
+        else if ((gradientsDifference <= 120 && gradientsDifference > 110) || (gradientsDifference <= 90 && gradientsDifference > 80))
+        {
+            lineOfBestFitGradientMark = 4;
+
+        }
+        else if ((gradientsDifference <= 130 && gradientsDifference > 120) || (gradientsDifference <= 80 && gradientsDifference > 70))
+        {
+            lineOfBestFitGradientMark = 3;
+        }
+        else if ((gradientsDifference <= 140 && gradientsDifference > 130) || (gradientsDifference <= 70 && gradientsDifference > 60))
+        {
+            lineOfBestFitGradientMark = 2;
+        }
+        else if ((gradientsDifference <= 150 && gradientsDifference > 140) || (gradientsDifference <= 60 && gradientsDifference > 50))
+        {
+            lineOfBestFitGradientMark = 1;
+        }
+        else if (gradientsDifference > 150 || gradientsDifference < 50)
+        {
+            lineOfBestFitGradientMark = 0;
+        }
+
+        //Award marks accordingly
+        lineOfBestFitGradient.text = lineOfBestFitGradientMark + "/5";
+    }
+
+    //Give letter grade based on mark
+    private void SetTotal()
+    {
+        //Show the total mark to player
+        totalMark.text = mark + "/43";
+
+        //Set Letter Grade Image based on mark
+        if(mark >= 35)
+        {
+            gradeA.SetActive(true);
+        }
+        else if(mark >= 31 && mark < 35)
+        {
+            gradeB.SetActive(true);
+        }
+        else if (mark >= 27 && mark < 31)
+        {
+            gradeC.SetActive(true);
+        }
+        else if (mark >= 23 && mark < 27)
+        {
+            gradeD.SetActive(true);
+        }
+        else if (mark < 23)
+        {
+            gradeE.SetActive(true);
+        }
+    }
+
+    
+    //Gives feedback to user
+    private void GiveFeedback()
+    {
+        //For each point that is not full marks, append pre-written feedback to label
+        if(independentVariableMark < 5 || dependentVariableMark < 5)
+        {
+            feedback.text += "- Read up on independent and dependent variables to understand what which are which \n";
+        }
+        if (graphLabelsMark < 5)
+        {
+            feedback.text += "- When creating the graph, remember to label each axis with the variable you are plotting as well as giving the graph a relevant title \n";
+        }
+        if (tableUnitsMark < 6)
+        {
+            feedback.text += "- In the table remember to plot the units in the headers \n";
+        }
+        if (gravityMark < 6)
+        {
+            feedback.text += "- To improve your value of g, repeat the experiment as unpredictable variables can impact your results \n";
+        }
+        if (gridLineLabelsMark < 6)
+        {
+            feedback.text += "- Remember to label your grid lines with a consistent scale on both axis' \n";
+        }
+        if (blankTableMark < 5)
+        {
+            feedback.text += "- Fill in all fields in the table \n";
+        }
+        if(lineOfBestFitGradientMark < 5)
+        {
+            feedback.text += "- Draw the line of best fit through all the graph points \n";
+        }
+
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class GradingTracker : MonoBehaviour
+{
+    //List of references to the graph labels
+    public List<GameObject> graphLabels;
+
+    //List of the table headers
+    public List<TMP_InputField> graphHeaders;
+
+    //List of the grid line labels
+    public List<GameObject> graphLineLabels;
+
+    //List of all input fields in the table
+    public List<TMP_InputField> allTableFields;
+
+    //List of the graph points
+    public List<GameObject> graphPoints;
+
+    //Holds the user calculated gradient
+    public double calculatedGradient;
+
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class GraphLabelScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+{
+    //Whether the user is holding the label
+    private bool isHolding = false;
+
+    //Location of label
+    private Vector2 pointLocation;
+
+    //New inputfield to instantiate
+    public GameObject createInputField;
+
+    public GameObject graphCanvas;
+
+    //Locators in the scene
+    public GameObject binLocator;
+    public GameObject spawnLocator;
+    public GradingTracker gradingTracker;
+
+    //Pick up label on mouse down
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        isHolding = true;
+    }
+
+    //Release on mouse up
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        isHolding = false;
+
+        //Delete over bin button
+        float distance = Vector3.Distance(this.transform.position, binLocator.transform.position);
+        if (distance <= 80)
+        {
+            Destroy(createInputField);
+        }
+    }
+
+    void Start()
+    {
+        //Initially set location to spawn
+        pointLocation = new Vector2(440, -544);
+
+        //Add label to list in grading tracker
+        gradingTracker.graphLineLabels.Add(this.gameObject);
+    }
+
+    void Update()
+    {
+        if (isHolding == true)
+        {
+            //If the user picks up in the spawn area, create a new inputfield in the spawn
+            if (pointLocation == new Vector2(440, -544))
+            {
+                InstantiateNewInputField();
+            }
+            //Move inputfield with mouse
+            pointLocation = new Vector2(this.transform.position.x, this.transform.position.y);
+            this.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, this.transform.position.z);
+        }
+    }
+
+    private Vector2 getPointLocation()
+    {
+        return pointLocation;
+    }
+
+    //Spawn a new inputfield
+    private void InstantiateNewInputField()
+    {
+        Instantiate(createInputField, new Vector3(spawnLocator.transform.position.x, spawnLocator.transform.position.y, this.transform.position.z), new Quaternion(0, 0, 0, 0), graphCanvas.transform);
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using System;
+
+//This class contains code reused from (Game Dev Guide, 2020)
+//This reused code is found on the lines
+//79-127, 130-211
+
+public class GraphPaper : Graphic
+{
+    //Density of the paper
+    private int numbers = 5;
+
+    //Number of rows and columns of big squares
+    int rows;
+    int columns;
+
+    //Size of graph paper
+    float bigWidth;
+    float bigHeight;
+
+    //Number of rows and columns of small squares
+    int smallRows;
+    int smallColumns;
+
+    //Size of big squares
+    float smallWidth;
+    float smallHeight;
+
+    //Width of each set of lines
+    float bigLineWidth = 3;
+    float smallLineWidth = 1f;
+
+    //Total width of page
+    float totalWidth;
+    float totalHeight;
+
+    public GameObject graphCanvas;
+
+    private int rowValue;
+
+    private int columnValue;
+
+    public void Start()
+    {
+        //Intitially set rows and columns to 1
+        rowValue = 1;
+        columnValue = 1;
+
+    }
+
+    private void Update()
+    {
+        //Sets global variables for rows and columns
+        rowValue = rows;
+        columnValue = columns;
+
+        //Update lines in graphic class
+        SetVerticesDirty();
+
+        //Increase or decrease rows and columns with mouse scroll wheel
+        numbers -= (int)Input.mouseScrollDelta.y;
+
+        //Set maximum and minimum for number of rows
+        if(numbers <= 1)
+        {
+            numbers = 1;
+        }
+        else if(numbers >= 15)
+        {
+            numbers = 15;
+        }
+    }
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class GraphPointScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+{
+    //Whether the user is holding the point
+    private bool isHolding = false;
+
+    //Location of point
+    private Vector2 pointLocation;
+
+    //New point to instantiate
+    public GameObject createImage;
+
+    public GameObject graphCanvas;
+
+    //Locators in the scene
+    public GameObject binLocator;
+    public GameObject spawnLocator;
+    public GradingTracker gradingTracker;
+
+    //Pick up point on mouse down
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        isHolding = true;
+    }
+
+    //Release on mouse up
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        isHolding = false;
+
+        //Delete over bin button
+        float distance = Vector3.Distance(this.transform.position, binLocator.transform.position);
+
+        if(distance <= 80)
+        {
+            Destroy(createImage);
+        }
+
+    }
+
+    void Start()
+    {
+        //Initially set location to spawn
+        pointLocation = new Vector2(9, -544);
+
+        gradingTracker.graphPoints.Add(this.gameObject);
+    }
+
+    void Update()
+    {
+        if(isHolding == true)
+        {
+            //If the user picks up in the spawn area, create a new point in the spawn
+            if (pointLocation == new Vector2(9, -544))
+            {
+                InstantiateNewImage();
+            }
+
+            // Move point with mouse
+             pointLocation = new Vector2(this.transform.position.x, this.transform.position.y);
+            this.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, this.transform.position.z);
+        }
+    }
+
+    private Vector2 getPointLocation()
+    {
+        return pointLocation;
+    }
+
+    //Spawn a new point
+    private void InstantiateNewImage()
+    {
+        Instantiate(createImage, new Vector3(spawnLocator.transform.position.x, spawnLocator.transform.position.y, this.transform.position.z), new Quaternion(0, 0, 0, 0), graphCanvas.transform);
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class GraphTitleScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+{
+    //Whether the user is holding the label
+    private bool isHolding = false;
+
+    //Location of label
+    private Vector2 pointLocation;
+
+    //New inputfield to instantiate
+    public GameObject createInputField;
+
+    public GameObject graphCanvas;
+
+    //Whether the label has been rotated
+    private bool isRotated = false;
+
+    //Locators in the scene
+    public GameObject leftGuide;
+    public GameObject binLocator;
+    public GameObject spawnLocator;
+
+    public GradingTracker gradingTracker;
+
+    //Pick up label on mouse down
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        isHolding = true;
+    }
+
+    //Release on mouse up
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        isHolding = false;
+
+        //Delete over bin button
+        float distance = Vector3.Distance(this.transform.position, binLocator.transform.position);
+        if (distance <= 80)
+        {
+            Destroy(createInputField);
+        }
+    }
+
+    void Start()
+    {
+        //Initially set location to spawn
+        pointLocation = new Vector2(389, -630);
+
+        //Add label to list in grading tracker
+        gradingTracker.graphLabels.Add(this.gameObject);
+    }
+
+    void Update()
+    {
+        //If the user picks up in the spawn area, create a new inputfield in the spawn
+        if (isHolding == true)
+        {
+            if (pointLocation == new Vector2(389, -630))
+            {
+                InstantiateNewInputField();
+            }
+
+            //Move inputfield with mouse
+            pointLocation = new Vector2(this.transform.position.x, this.transform.position.y);
+            this.transform.position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, this.transform.position.z);
+        }
+
+        //Should it rotate
+        if (this.transform.position.x <= leftGuide.transform.position.x)
+        {
+            if (isRotated == false)
+            {
+                //Rotate anti-clockwise
+                this.transform.rotation = Quaternion.Euler(0, 0, 90);
+                isRotated = true;
+            }
+        }
+        else if(this.transform.position.x > leftGuide.transform.position.x)
+        {
+            if (isRotated == true)
+            {
+                //Rotate clockwise
+                this.transform.rotation = Quaternion.Euler(0, 0, 0);
+                isRotated = false;
+                print("yes");
+            }
+        }
+    }
+
+    private Vector2 getPointLocation()
+    {
+        return pointLocation;
+    }
+
+    //Spawn a new inputfield
+    private void InstantiateNewInputField()
+    {
+        Instantiate(createInputField, new Vector3(spawnLocator.transform.position.x, spawnLocator.transform.position.y, this.transform.position.z), new Quaternion(0, 0, 0, 0), graphCanvas.transform);
+
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using System;
+
+//This class contains code reused from (Game Dev Guide, 2020)
+//This reused code is found on the lines
+//229-338
+
+public class GridScript : Graphic
+{
+    public int rows;
+    public int columns;
+
+    //Number of rows and columns of squares
+    float width;
+    float height;
+
+    //Width of the lines
+    float widthOfLine = (float)4;
+
+    float totalWidth;
+    float totalHeight;
+
+    public TextMeshProUGUI rowText;
+    public TextMeshProUGUI columnText;
+
+    public GameObject tableCanvas;
+
+    public TMP_InputField theField;
+
+    private int rowValue;
+
+    private int columnValue;
+
+    private List<TMP_InputField> currentInputFields = new List<TMP_InputField>();
+
+    public GameObject theLocation;
+
+    public GradingTracker gradingTracker;
+
+    public void Start()
+    {
+        rowValue = 1;
+        columnValue = 1;
+
+    }
+
+    private void Update()
+    {
+        rows = Int32.Parse(rowText.text);
+        columns = Int32.Parse(columnText.text);
+
+        //Checks if the values have been changed
+        if(rows != rowValue || columns != columnValue)
+        {
+            //Remove current fields
+            for(int i = 0; i < currentInputFields.Count; i++)
+            {
+                Destroy(currentInputFields[i].gameObject);
+                gradingTracker.graphHeaders.Clear();
+                gradingTracker.allTableFields.Clear();
+            }
+
+            //Empties list
+            currentInputFields.Clear();
+
+            //Add new fields
+            float ySize = (520 * 2) / rows;
+            float xSize = 400 / columns;
+
+            //Offset location of each field based on row number to ensure all fields match up
+            for(int i = 0; i < rows; i++)
+            {
+                for(int j = 0; j < columns; j++)
+                {
+                    float rowHold = 0;
+                    if(rows == 1)
+                    {
+                        rowHold = 423;
+                    }
+                    if(rows == 2)
+                    {
+                        rowHold = 188;
+                    }
+                    else if(rows == 3)
+                    {
+                        rowHold = 108;
+                    }
+                    else if (rows == 4)
+                    {
+                        rowHold = 71;
+                    }
+                    else if (rows == 5)
+                    {
+                        rowHold = 47;
+                    }
+                    else if (rows == 6)
+                    {
+                        rowHold = 26;
+                    }
+                    else if (rows == 7)
+                    {
+                        rowHold = 18;
+                    }
+                    else if (rows == 8)
+                    { 
+                        rowHold = 9;
+                    }
+                    else if (rows == 10)
+                    {
+                        rowHold = -4;
+                    }
+                    else if (rows == 11)
+                    {
+                        rowHold = -6;
+                    }
+                    else if (rows == 12)
+                    {
+                        rowHold = -9;
+                    }
+                    else if (rows == 13)
+                    {
+                        rowHold = -13;
+                    }
+                    else if (rows == 14)
+                    {
+                        rowHold = -16;
+                    }
+                    else if (rows == 15)
+                    {
+                        rowHold = -18;
+                    }
+                    else if (rows == 16)
+                    {
+                        rowHold = -20;
+                    }
+                    else if (rows == 17)
+                    {
+                        rowHold = -21;
+                    }
+                    else if (rows == 18)
+                    {
+                        rowHold = -23;
+                    }
+                    else if (rows == 19)
+                    {
+                        rowHold = -24;
+                    }
+
+                    //Offset location of each field based on column number to ensure all fields match up
+                    float columnHold = 0;
+                    if(columns == 1)
+                    {
+                        columnHold = -283;
+                    }
+                    else if(columns == 2)
+                    {
+                        columnHold = -99;
+                    }
+                    else if (columns == 3)
+                    {
+                        columnHold = -41;
+                    }
+                    else if (columns == 4)
+                    {
+                        columnHold = -10;
+                    }
+                    else if (columns == 5)
+                    {
+                        columnHold = 10;
+                    }
+                    else if (columns == 6)
+                    {
+                        columnHold = 22;
+                    }
+                    else if (columns == 7)
+                    {
+                        columnHold = 28;
+                    }
+                    else if (columns == 8)
+                    {
+                        columnHold = 34;
+                    }
+
+                    //Instantiate first inputfield
+                    if (i == 0 && j == 0)
+                    {
+                        InstantiateInputField(new Vector3(theLocation.transform.position.x - columnHold, theLocation.transform.position.y - rowHold, 0), 0);
+                    }
+                    else
+                    {
+                        //Instantiate inputfields considering offsets required
+                        float columnAmount = 738 / columns;
+                        float rowAmount = 954 / rows;
+
+                        //If in row one, for grading system
+                        if (i == 0)
+                        {
+                            InstantiateInputField(new Vector3(theLocation.transform.position.x + (columnAmount * j) - columnHold, theLocation.transform.position.y - (rowAmount * i) - rowHold, 0), 0);
+                        }
+                        else
+                        {
+                            InstantiateInputField(new Vector3(theLocation.transform.position.x + (columnAmount * j) - columnHold, theLocation.transform.position.y - (rowAmount * i) - rowHold, 0), 1);
+                        }
+
+                    }
+                }
+            }
+
+            //Reszing the input fields based on number of rows and columns
+            for(int i = 0; i < currentInputFields.Count; i++)
+            {
+                currentInputFields[i].GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, (954 / rows) - 2);
+                currentInputFields[i].GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (738 / columns) - 8);
+            }
+
+        }
+
+        rowValue = rows;
+        columnValue = columns;
+
+        //Update graphics class
+        SetVerticesDirty();
+    }
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class HoldPointScript : MonoBehaviour
+{
+    //Sets up class as singleton
+    public static HoldPointScript Instance { get; private set; }
+
+    //If the player is holding an object
+    private bool isHolding = false;
+
+    //What object is being held
+    private string objHolding = "";
+
+    //What object is being looked at
+    private string lookingAt = "";
+
+    //Ensures only one instance exists - for singleton
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    //Getters and setters
+    public void setIsHolding(bool b)
+    {
+        isHolding = b;
+    }
+
+    public bool getIsHolding()
+    {
+        return isHolding;
+    }
+
+    public void setObjHolding(string s)
+    {
+        objHolding = s;
+    }
+
+    public string getObHolding()
+    {
+        return objHolding;
+    }
+    public void setLookingAt(string s)
+    {
+        lookingAt = s;
+    }
+
+    public string getLookingAt()
+    {
+        return lookingAt;
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class InfoButtonController : MonoBehaviour
+{
+    //The button
+    public Button theButton;
+
+    public CanvasController canvasController;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        theButton.onClick.AddListener(TaskOnClick);
+    }
+
+    //Close equation page when clicked
+    void TaskOnClick()
+    {
+        canvasController.swapEquationState();
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class MenuButton : MonoBehaviour
+{
+    public MenuController menuController;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Set up button listener
+        Button btn = this.GetComponent<Button>();
+        btn.onClick.AddListener(TaskOnClick);
+    }
+
+    void TaskOnClick()
+    {
+        //If the user selects the practical, change image from greyscale to colour
+        if(this.name == "G_Colour")
+        {
+            menuController.SetDeterminationGActive(true);
+            menuController.colour.SetActive(true);
+
+        }
+        //If the user clicks start experiment, having clicked on the experiment, play experiment scene
+        else if(this.name == "Start Experiment")
+        {
+            if(menuController.GetDeterminationGActive() == true)
+            {
+                SceneManager.LoadScene(sceneName: "Determination_of_g_scene");
+            }
+        }
+        //If the user clicks quit, close the game
+        else if (this.name == "Quit Game")
+        {
+            Application.Quit();
+        }
+
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MenuController : MonoBehaviour
+{
+    //The greyscale determination of g image
+    public GameObject grey;
+
+    //The coloured determination of g image
+    public GameObject colour;
+
+    //Whether determination of g has been selected
+    private bool determinationGActive;
+
+    //Locators for determination of g box
+    public GameObject topRight;
+    public GameObject bottomLeft;
+
+    //Explanation image for determination of g
+    public GameObject explanation;
+
+    //Initially only show greyscale image
+    void Start()
+    {
+        colour.SetActive(false);
+        determinationGActive = false;
+        explanation.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (determinationGActive == false)
+        {
+            //If hovering over determination of g show coloured image
+            if (Input.mousePosition.x <= topRight.transform.position.x && Input.mousePosition.x >= bottomLeft.transform.position.x)
+            {
+                if (Input.mousePosition.y <= topRight.transform.position.y && Input.mousePosition.y >= bottomLeft.transform.position.y)
+                {
+                    colour.SetActive(true);
+                }
+                else
+                {
+                    colour.SetActive(false);
+                }
+            }
+            else
+            {
+                colour.SetActive(false);
+            }
+        }
+
+        //Show explanation when determination of g is active
+        if(determinationGActive == true)
+        {
+            explanation.SetActive(true);
+        }
+        else
+        {
+            explanation.SetActive(false);
+        }
+    }
+
+    public void SetDeterminationGActive(bool b)
+    {
+        determinationGActive = b;
+    }
+
+    public bool GetDeterminationGActive()
+    {
+        return determinationGActive;
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MouseMovement : MonoBehaviour
+{
+    public Transform playerBody;
+
+    public CanvasController rulerController;
+
+    //Initial rotation of 0
+    float xRotation = 0f;
+
+    //Mouse sensitivity
+    public float mouseSpeed = 100f; 
+
+    void Update()
+    {
+        //If the canvases are open, show the mouse cursor
+        if (rulerController.getRulerActive() == false && rulerController.getTableActive() == false && rulerController.getGraphActive() == false && 
+            rulerController.getEquationActive() == false && rulerController.getWelcomeActive() == false && rulerController.getMenuActive() == false 
+            && rulerController.getInfoActive() == false && rulerController.getFinalActive() == false && rulerController.getNotesActive() == false)
+        {
+            //If the canvases are closed, lock cursor to screen center and rotate camera with mouse movement
+            float mouseX = Input.GetAxis("Mouse X") * 100f * Time.deltaTime;
+            float mouseY = Input.GetAxis("Mouse Y") * 100f * Time.deltaTime;
+
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+
+            playerBody.Rotate(Vector3.up * mouseX);
+
+            Cursor.lockState = CursorLockMode.Locked;
+
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+
+public class OverallTimerScript : MonoBehaviour
+{
+    //The label for the timer
+    public TextMeshProUGUI timerLabel;
+
+    //Current timer information
+    private double timerSeconds = 0;
+    private int timerMinutes = 0;
+
+    public Canvas menu;
+
+    public GradingSystem gradingSystem;
+
+    //Timer value to set
+    public string timerValue;
+
+    void Update()
+    {
+        //Freeze timer if menu or grading system is open
+        if(menu.isActiveAndEnabled == false && gradingSystem.isActiveAndEnabled == false)
+        {
+            //Add time to timer considering framerate
+            timerSeconds += Time.deltaTime;
+
+            //Increment minutes when seconds reaches 60
+            if (timerSeconds >= 60)
+            {
+                timerSeconds = 0;
+                timerMinutes += 1;
+            }
+
+            //Set labels to current time
+            timerLabel.text = (timerMinutes.ToString() + "m " + timerSeconds.ToString("0.0") + "s");
+            timerValue = (timerMinutes.ToString() + "m " + timerSeconds.ToString("0.0") + "s");
+        }
+
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+//This class contains code reused from (Jimmy Vegas, 2018)
+//This reused code is found on the lines
+//46-48, 177-178, 191-192
+
+public class PickUp : MonoBehaviour
+{
+    //The location that the user held item is suspended
+    public Transform toHoldPoint;
+
+    //The next apparatus stage to be instantiated
+    public GameObject toInstantiate;
+
+    public CanvasController canvasController;
+
+    public ArrowController arrowController;
+
+    public AudioController audioController;
+
+    private void OnMouseDown()
+    {
+        //Distance between object and holdpoint
+        float dist = Vector3.Distance(GetComponent<Rigidbody>().position, GameObject.Find("HoldPoint").transform.position);
+
+        string name = GetComponent<Rigidbody>().name;
+
+        //If the canvases are closed
+        if (canvasController.getFinalActive() == false && canvasController.getTableActive() == false && 
+            canvasController.getGraphActive() == false && canvasController.getInfoActive()== false && 
+            canvasController.getEquationActive() == false && canvasController.getNotesActive() == false && 
+            canvasController.getSettingsActive() == false && canvasController.getMenuActive() == false)
+        {
+            //If the object is less than four units away
+            if (dist <= 4)
+            {
+                //If item is able to be picked up
+                if (GetComponent<Rigidbody>().name != "ClampStand_LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF" && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGOFF, Timer"
+                    && GetComponent<Rigidbody>().name != "Ruler, Clamp, LGON, Timer, Wires" && GetComponent<Rigidbody>().name != "Clipboard" && GetComponent<Rigidbody>().name != "Info Page"
+                    && GetComponent<Rigidbody>().name != "Graph Page" && GetComponent<Rigidbody>().name != "Equation Page" && GetComponent<Rigidbody>().name != "Final Page")
+                {
+}
+
+else if (HoldPointScript.Instance.getLookingAt() == "Clipboard")
+                {
+                    //Open table and close table arrow
+                    arrowController.arrowTable.SetActive(false);
+                    canvasController.swapTableState();
+                    audioController.PickUpPaper();
+                }
+                else if (HoldPointScript.Instance.getLookingAt() == "Info Page")
+                {
+                    //Open info page and close info arrow
+                    arrowController.arrowInfo.SetActive(false);
+                    canvasController.swapInfoState();
+                    audioController.PickUpPaper();
+                }
+                else if (HoldPointScript.Instance.getLookingAt() == "Final Page")
+                {
+                    //Open final page and close final arrow
+                    arrowController.arrowFinal.SetActive(false);
+                    canvasController.swapFinalState();
+                    audioController.PickUpPaper();
+                }
+                else if (HoldPointScript.Instance.getLookingAt() == "Graph Page")
+                {
+                    //Open graph page and close graph arrow
+                    arrowController.arrowGraph.SetActive(false);
+                    canvasController.swapGraphState();
+                    audioController.PickUpPaper();
+                }
+                else if (HoldPointScript.Instance.getLookingAt() == "Equation Page")
+                {
+                    //Open equation page and close equation arrow
+                    arrowController.arrowEquation.SetActive(false);
+                    canvasController.swapEquationState();
+                    audioController.PickUpPaper();
+                }
+            }
+        }
+        
+    }
+
+    private void OnMouseUp()
+    {
+        //If looking at the build area
+        if (HoldPointScript.Instance.getLookingAt() == "Build")
+        {
+            this.transform.parent = null;
+
+            GetComponent<Rigidbody>().useGravity = true;
+
+            HoldPointScript.Instance.setIsHolding(false);
+            
+            //If holding clampstand
+            if (BuildState.Instance.getBuildState() == "Nothing" && HoldPointScript.Instance.getObHolding() == "ClampStand")
+            {
+                //Move clampstand to correct position and rotation
+                this.transform.position = new Vector3((float)-5.057, (float)2.216, (float)5.218);
+                this.transform.rotation = new Quaternion(0, -180, 0, 0);
+                //Record new build state
+                BuildState.Instance.setBuildState("ClampStand");
+
+                //Remove build arrow
+                if(arrowController.buildHasOpened == true)
+                {
+                    arrowController.arrowBuild.SetActive(false);
+                }
+                //Play click sound
+                audioController.AttachClick();
+            }
+            //For each stage, if the player is holding the correct object, delete the object and apparatus and transform next apparatus stage to the correct location. Play audio click
+            else if (BuildState.Instance.getBuildState() == "ClampStand" && HoldPointScript.Instance.getObHolding() == "LightGate_Off")
+            {
+                BuildState.Instance.setBuildState("ClampStand, LGOff");
+                Destroy(gameObject);
+
+                toInstantiate.transform.position = new Vector3((float)-5.052, (float)2.208, (float)5.226);
+
+                audioController.AttachClick();
+
+            }
+            else if (BuildState.Instance.getBuildState() == "ClampStand, LGOff" && HoldPointScript.Instance.getObHolding() == "Ruler")
+            {
+                BuildState.Instance.setBuildState("Ruler, Clamp, LGOFF");
+                Destroy(gameObject);
+
+                toInstantiate.transform.position = new Vector3((float)-5.063, (float)2.207, (float)4.229);
+
+                audioController.AttachClick();
+
+            }
+            else if (BuildState.Instance.getBuildState() == "Ruler, Clamp, LGOFF" && HoldPointScript.Instance.getObHolding() == "Timer")
+            {
+                BuildState.Instance.setBuildState("Ruler, Clamp, LGOFF, Timer");
+                Destroy(gameObject);
+
+                toInstantiate.transform.position = new Vector3((float)-5.06, (float)2.206, (float)4.224);
+
+                audioController.AttachClick();
+            }
+            else if (BuildState.Instance.getBuildState() == "Ruler, Clamp, LGOFF, Timer" && HoldPointScript.Instance.getObHolding() == "Wires")
+            {
+                BuildState.Instance.setBuildState("Ruler, Clamp, LGOFF, Timer, Wires");
+                Destroy(gameObject);
+
+                toInstantiate.transform.position = new Vector3((float)-5.06, (float)2.206, (float)4.224);
+
+                audioController.AttachClick();
+
+                if (arrowController.tableHasOpened == false)
+                {
+                    arrowController.arrowTable.SetActive(true);
+                    BuildState.Instance.buildState = "Table";
+                }
+            }
+        }
+        //If player drops the weighted card in the right location, open the ruler state
+        else if (HoldPointScript.Instance.getLookingAt() == "Ruler, Clamp, LGON, Timer, Wires" && HoldPointScript.Instance.getObHolding() == "Weighted Card")
+        {
+            canvasController.swapRulerState();
+        }
+
+//If card is dropped from ruler
+    public void droppingCardFromRuler()
+    {
+        //Reused Lines from (Jimmy Vegas, 2018)
+        //Activate gravity
+        this.transform.parent = null;
+        GetComponent<Rigidbody>().useGravity = true;
+
+        //Remove reference to what is being held
+        HoldPointScript.Instance.setIsHolding(false);
+
+        //Play whoosh sound
+        audioController.StartWhoosh();
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    //The character controller
+    public CharacterController controller;
+
+    //Player speed
+    public float speed = 0.1f;
+
+    void Update()
+    {
+        //If any canvas is open, freeze the player
+        if (BuildState.Instance.getRulerCanvasOpen() == false && BuildState.Instance.getNotesCanvasOpen() == false &&
+            BuildState.Instance.getGraphCanvasOpen() == false && BuildState.Instance.getWelcomeCanvasOpen() == false &&
+            BuildState.Instance.getMenuCanvasOpen() == false && BuildState.Instance.getInfoCanvasOpen() == false 
+            && BuildState.Instance.getFinalCanvasOpen() == false)
+        {
+            //Move player based on input and considering framerate
+            float x = Input.GetAxis("Horizontal");
+            float z = Input.GetAxis("Vertical");
+
+            Vector3 move = transform.right * x + transform.forward * z;
+
+            controller.Move(move * speed * Time.deltaTime);
+
+        }
+
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class SetSliderValue : MonoBehaviour
+{
+    //Label to print slider number to
+    public TextMeshProUGUI theText;
+
+    void Update()
+    {
+        //Set label text to slider value
+        theText.text = this.gameObject.GetComponent<Slider>().value.ToString();
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class ToggleController : MonoBehaviour, IPointerDownHandler
+{
+
+    //Whether background piano music is player
+    public bool musicIsOn;
+
+    //Whether special effects are toggled on
+    public bool specialIsOn;
+
+    public AudioController audioController;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Initially set background music and special effects to on
+        musicIsOn = true;
+        specialIsOn = true;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        //Start and stop piano
+        if(this.name == "Music")
+        {
+            if(musicIsOn == true)
+            {
+                musicIsOn = false;
+                audioController.StopPiano();
+            }
+            else
+            {
+                musicIsOn = true;
+                audioController.StartPiano();
+            }
+        }
+        //Start and stop special effects
+        else if(this.name == "Special")
+        {
+            if(specialIsOn == true)
+            {
+                specialIsOn = false;
+                audioController.specialIsPlaying = false;
+            }
+            else
+            {
+                specialIsOn = true;
+                audioController.specialIsPlaying = true;
+            }
+        }
+    }
+
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class ToHoldRaycast : MonoBehaviour
+{
+    //HUD text in the center of the screen
+    public Text uiText;
+
+    public CanvasController rulerController;
+
+    void Update()
+    {
+        //If the canvases are not open
+        if(rulerController.getTableActive() == false && rulerController.getGraphActive() == false &&
+            rulerController.getEquationActive() == false && rulerController.getInfoActive() == false)
+        {
+            //Fire raycast
+            RaycastHit hit;
+
+            //If raycast hits an object
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 3))
+            {
+                if (HoldPointScript.Instance.getIsHolding() == true)
+                {
+                    //Show build if looking at the build area
+                    if (hit.collider.name == "BuildObjCheck")
+                    {
+                        if ((BuildState.Instance.getBuildState() == "Nothing" && HoldPointScript.Instance.getObHolding() == "ClampStand") ||
+                            (BuildState.Instance.getBuildState() == "ClampStand" && HoldPointScript.Instance.getObHolding() == "LightGate_Off") ||
+                            (BuildState.Instance.getBuildState() == "ClampStand, LGOff" && HoldPointScript.Instance.getObHolding() == "Ruler") ||
+                            (BuildState.Instance.getBuildState() == "Ruler, Clamp, LGOFF" && HoldPointScript.Instance.getObHolding() == "Timer") ||
+                            (BuildState.Instance.getBuildState() == "Ruler, Clamp, LGOFF, Timer" && HoldPointScript.Instance.getObHolding() == "Wires"))
+                        {
+                            uiText.text = "Build";
+                            HoldPointScript.Instance.setLookingAt("Build");
+                        }
+                    }
+                    //If holding card and looking at the appararus, show drop
+                    else if (hit.collider.name == "Ruler, Clamp, LGON, Timer, Wires")
+                    {
+                        if (HoldPointScript.Instance.getObHolding() == "Weighted Card")
+                        {
+                            uiText.text = "Drop";
+                            HoldPointScript.Instance.setLookingAt("Ruler, Clamp, LGON, Timer, Wires");
+                        }
+
+                    }
+                    //Otherwise show nothing
+                    else
+                    {
+                        uiText.text = ("");
+                        HoldPointScript.Instance.setLookingAt("Nothing");
+                    }
+
+
+                }
+                //Show open table when looking at the table
+                else if (hit.collider.name == "Clipboard")
+                {
+                    uiText.text = "Open Table";
+                    //Hold reference to what is being looked at
+                    HoldPointScript.Instance.setLookingAt("Clipboard");
+                }
+                //Show open info page when looking at the info page
+                else if (hit.collider.name == "Info Page")
+                {
+                    uiText.text = "Open Info Page" +
+                        "";
+                    //Hold reference to what is being looked at
+                    HoldPointScript.Instance.setLookingAt("Info Page");
+                }
+                //Show open graph page when looking at the graph page
+                else if (hit.collider.name == "Graph Page")
+                {
+                    uiText.text = "Open Graph";
+                    //Hold reference to what is being looked at
+                    HoldPointScript.Instance.setLookingAt("Graph Page");
+                }
+                //Show open final page when looking at the final page
+                else if (hit.collider.name == "Final Page")
+                {
+                    uiText.text = "Open Final Page";
+                    //Hold reference to what is being looked at
+                    HoldPointScript.Instance.setLookingAt("Final Page");
+                }
+                //Show open equation page when looking at the equation page
+                else if (hit.collider.name == "Equation Page")
+                {
+                    uiText.text = "Open Equation Page";
+                    //Hold reference to what is being looked at
+                    HoldPointScript.Instance.setLookingAt("Equation Page");
+                }
+                //Otherwise show pick up
+                else if (hit.collider.name != "BuildObjCheck" && hit.collider.name != "Ruler, Clamp, LGON, Timer, Wires" && hit.collider.name != "Ruler, Clamp, LGOFF, Timer" 
+                    && hit.collider.name != "Ruler, Clamp, LGOFF" && hit.collider.name != "ClampStand,LGOFF")
+                {
+                    uiText.text = ("Pick up");
+                    //Hold reference to what is being looked at
+                    HoldPointScript.Instance.setLookingAt("Object");
+                }
+            }
+            else
+            {
+                uiText.text = "";
+                HoldPointScript.Instance.setLookingAt("Nothing");
+            }
+        }
+        else
+        {
+            HoldPointScript.Instance.setLookingAt("");
+        }
+        
+
+    }
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+//This class contains code reused from (Game Dev Guide, 2020)
+//This reused code is found on the lines
+//81-142
+public class UILineRenderer : Graphic, IPointerDownHandler, IPointerUpHandler
+{
+    //Size of graph paper
+    public Vector2Int gridSize;
+
+    //List of start and end points of line
+    public List<Vector2> points;
+
+    //Width and height of line
+    float width;
+    float height;
+    float unitWidth;
+    float unitHeight;
+
+    //Thickness of line
+    public float thickness = 10f;
+
+    //Whether the user is holding the mouse
+    public bool isHolding = false;
+
+    public CanvasController canvasController;
+
+    public Image posImage;
+
+    public GradingTracker gradientTracker;
+
+    void Start()
+    {
+        points[0] = new Vector2(0, 0);
+        points[1] = new Vector2(0, 0);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(canvasController.isDrawing == true)
+        {
+            //If user is holding the mouse, set second point to mouse location
+            if (isHolding == true)
+            {
+                points[1] = new Vector2(Mathf.Round(Input.mousePosition.x - (1185 + 655)), Mathf.Round(Input.mousePosition.y - (496 + 405)));
+            }
+
+            //Reset graphics class
+            SetVerticesDirty();
+        }
+    }
+
+    //When the user presses the mouse
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        //Start drawing and set first point to where the mouse was clicked
+        if (canvasController.isDrawing == true)
+        {
+            points[0] = new Vector2(Mathf.Round(Input.mousePosition.x - 1840), Mathf.Round(Input.mousePosition.y - 901));
+            isHolding = true;
+        }
+    }
+
+    //Set second location to where the mouse was released
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if(canvasController.isDrawing == true)
+        {
+            points[1] = new Vector2(Mathf.Round(Input.mousePosition.x - (1185 + 655)), Mathf.Round(Input.mousePosition.y - (496 + 405)));
+            isHolding = false;
+        }
+        printGradient();
+    }
+
+
+    //Save line points to grading tracker
+    void printGradient()
+    {
+        double calcActualGradient = (points[1].y - points[0].y) / (points[1].x - points[0].x);
+
+        gradientTracker.calculatedGradient = calcActualGradient;
+    }
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
+
+public class WelcomeCanvasController : MonoBehaviour
+{
+    //The current stage the user is on
+    public int stageNumber = 1;
+
+    //Each stage of tutorial
+    public GameObject stage1;
+    public GameObject stage2;
+    public GameObject stage3;
+    public GameObject stage4;
+    public GameObject stage5;
+
+    public TextMeshProUGUI theText;
+
+    public CanvasController canvasController;
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        stage1.SetActive(true);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Show current stage number to user
+        theText.text = stageNumber + " of 5";
+
+        //Show relevent information on stage
+        if(stageNumber == 1)
+        {
+            stage1.SetActive(true);
+            stage2.SetActive(false);
+            stage3.SetActive(false);
+            stage4.SetActive(false);
+            stage5.SetActive(false);
+        }
+        if (stageNumber == 2)
+        {
+            stage1.SetActive(false);
+            stage2.SetActive(true);
+            stage3.SetActive(false);
+            stage4.SetActive(false);
+            stage5.SetActive(false);
+        }
+        if (stageNumber == 3)
+        {
+            stage1.SetActive(false);
+            stage2.SetActive(false);
+            stage3.SetActive(true);
+            stage4.SetActive(false);
+            stage5.SetActive(false);
+        }
+        if (stageNumber == 4)
+        {
+            stage1.SetActive(false);
+            stage2.SetActive(false);
+            stage3.SetActive(false);
+            stage4.SetActive(true);
+            stage5.SetActive(false);
+        }
+        if (stageNumber == 5)
+        {
+            stage1.SetActive(false);
+            stage2.SetActive(false);
+            stage3.SetActive(false);
+            stage4.SetActive(false);
+            stage5.SetActive(true);
+        }
+    }
+
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
+using System;
+
+public class WiresScript : MonoBehaviour
+{
+    //If card is passing through
+    private bool running = false;
+
+    //Initially timer value is 0 
+    private double timer = 0;
+
+    public TextMeshPro uiText;
+
+    void Update()
+    {
+        if(running == true)
+        {
+            //Increment time considering frame rate
+            timer += Time.deltaTime;
+        }
+        else
+        {
+            //Print value rounded and to 3 decimal places
+            double toPrint = Math.Round((timer * 10), 4);
+            uiText.text = toPrint.ToString("0.000");
+        }
+    }
+
+    //Start timer when card first starts colliding with laser
+    private void OnTriggerEnter(Collider other)
+    {
+        running = true;
+        timer = 0;
+    }
+
+    //Stop timer when card stops colliding with laser
+    private void OnTriggerExit(Collider other)
+    {
+        running = false;
+    }
+}

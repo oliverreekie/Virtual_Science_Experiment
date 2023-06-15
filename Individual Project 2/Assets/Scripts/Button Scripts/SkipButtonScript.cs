@@ -18,19 +18,18 @@ public class SkipButtonScript : MonoBehaviour
         btn.onClick.AddListener(TaskOnClick);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    //Called when the button is pressed
     void TaskOnClick()
     {
+        //Calls function depending on the button name pressed
         if(this.name == "Skip Button")
         {
+            //Finish and close the tutorial
             canvasController.swapWelcomeState();
             canvasController.swapHUDState();
             welcomeCanvasController.stageNumber = 1;
+
+            //If this is the first time the tutorial has ended, show bouncing arrows to guide the user
             if (arrowController.infoHasOpened == false)
             {
                 arrowController.arrowInfo.SetActive(true);
@@ -39,12 +38,14 @@ public class SkipButtonScript : MonoBehaviour
         }
         else if(this.name == "Right Arrow")
         {
+            //Move to next stage of tutorial
             welcomeCanvasController.stageNumber += 1;
             if(welcomeCanvasController.stageNumber == 6)
             {
                 canvasController.swapWelcomeState();
                 canvasController.swapHUDState();
                 welcomeCanvasController.stageNumber = 1;
+                //If this is the first time the tutorial has ended, show bouncing arrows to guide the user
                 if (arrowController.infoHasOpened == false)
                 {
                     arrowController.arrowInfo.SetActive(true);
@@ -54,6 +55,7 @@ public class SkipButtonScript : MonoBehaviour
         }
         else if (this.name == "Left Arrow")
         {
+            //Move to previous stage of tutorial
             welcomeCanvasController.stageNumber -= 1;
             if (welcomeCanvasController.stageNumber == 1)
             {

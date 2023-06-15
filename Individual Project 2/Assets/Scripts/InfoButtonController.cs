@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class InfoButtonController : MonoBehaviour
 {
-
+    //The button
     public Button theButton;
 
     public CanvasController canvasController;
@@ -16,6 +16,7 @@ public class InfoButtonController : MonoBehaviour
         theButton.onClick.AddListener(TaskOnClick);
     }
 
+    //Close equation page when clicked
     void TaskOnClick()
     {
         canvasController.swapEquationState();

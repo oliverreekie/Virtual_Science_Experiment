@@ -3,6 +3,7 @@ ScriptsOnlyBuild:
     Assembly-CSharp.dll:
     - ArrowController
     - ArrowScript
+    - AudioController
     - BouncingArrow
     - BuildState
     - CameraAnimation
@@ -15,6 +16,7 @@ ScriptsOnlyBuild:
     - GameMenuButtonController
     - GradientLines
     - GradingSystem
+    - GradingTracker
     - GraphLabelScript
     - GraphPaper
     - GraphPointScript
@@ -30,8 +32,8 @@ ScriptsOnlyBuild:
     - SetSliderValue
     - SkipButtonScript
     - ToHoldRaycast
+    - ToggleController
     - UILineRenderer
-    - WeightedCardScript
     - WelcomeCanvasController
     - WiresScript
     Unity.Rider.Editor.dll:
@@ -69,6 +71,7 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.RectMask2D
     - UnityEngine.UI.Slider
     - UnityEngine.UI.Text
+    - UnityEngine.UI.Toggle
   sceneClasses:
     Assets/Scenes/Determination_of_g_Scene.unity:
     - Class: 1
@@ -97,6 +100,10 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
+    - Class: 82
+      Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
     - Class: 89
       Script: {instanceID: 0}
     - Class: 90
@@ -114,7 +121,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 1564}
     - Class: 114
+      Script: {instanceID: 1580}
+    - Class: 114
       Script: {instanceID: 1638}
+    - Class: 114
+      Script: {instanceID: 1644}
     - Class: 114
       Script: {instanceID: 1656}
     - Class: 114
@@ -146,61 +157,65 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 2382}
     - Class: 114
-      Script: {instanceID: 2498}
+      Script: {instanceID: 2464}
     - Class: 114
-      Script: {instanceID: 2540}
+      Script: {instanceID: 2500}
     - Class: 114
-      Script: {instanceID: 2666}
+      Script: {instanceID: 2542}
     - Class: 114
-      Script: {instanceID: 2708}
+      Script: {instanceID: 2668}
     - Class: 114
-      Script: {instanceID: 2760}
+      Script: {instanceID: 2710}
     - Class: 114
-      Script: {instanceID: 2852}
+      Script: {instanceID: 2762}
     - Class: 114
-      Script: {instanceID: 2906}
+      Script: {instanceID: 2854}
     - Class: 114
-      Script: {instanceID: 2942}
+      Script: {instanceID: 2908}
     - Class: 114
-      Script: {instanceID: 2966}
+      Script: {instanceID: 2932}
     - Class: 114
-      Script: {instanceID: 2968}
+      Script: {instanceID: 2946}
     - Class: 114
-      Script: {instanceID: 3002}
+      Script: {instanceID: 2970}
     - Class: 114
-      Script: {instanceID: 3062}
+      Script: {instanceID: 2972}
     - Class: 114
-      Script: {instanceID: 3118}
+      Script: {instanceID: 3006}
     - Class: 114
-      Script: {instanceID: 3190}
+      Script: {instanceID: 3066}
     - Class: 114
-      Script: {instanceID: 3280}
+      Script: {instanceID: 3122}
     - Class: 114
-      Script: {instanceID: 3302}
+      Script: {instanceID: 3194}
     - Class: 114
-      Script: {instanceID: 3362}
+      Script: {instanceID: 3284}
     - Class: 114
-      Script: {instanceID: 3364}
+      Script: {instanceID: 3306}
     - Class: 114
-      Script: {instanceID: 3536}
+      Script: {instanceID: 3366}
     - Class: 114
-      Script: {instanceID: 3798}
+      Script: {instanceID: 3368}
     - Class: 114
-      Script: {instanceID: 3910}
+      Script: {instanceID: 3540}
     - Class: 114
-      Script: {instanceID: 4170}
+      Script: {instanceID: 3802}
     - Class: 114
-      Script: {instanceID: 4204}
+      Script: {instanceID: 3914}
     - Class: 114
-      Script: {instanceID: 4316}
+      Script: {instanceID: 4092}
     - Class: 114
-      Script: {instanceID: 4388}
+      Script: {instanceID: 4176}
     - Class: 114
-      Script: {instanceID: 4408}
+      Script: {instanceID: 4210}
     - Class: 114
-      Script: {instanceID: 4646}
+      Script: {instanceID: 4392}
     - Class: 114
-      Script: {instanceID: 115146}
+      Script: {instanceID: 4412}
+    - Class: 114
+      Script: {instanceID: 4650}
+    - Class: 114
+      Script: {instanceID: 19630}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -275,25 +290,25 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 2382}
     - Class: 114
-      Script: {instanceID: 2498}
+      Script: {instanceID: 2500}
     - Class: 114
-      Script: {instanceID: 2666}
+      Script: {instanceID: 2668}
     - Class: 114
-      Script: {instanceID: 2852}
+      Script: {instanceID: 2854}
     - Class: 114
-      Script: {instanceID: 2906}
+      Script: {instanceID: 2908}
     - Class: 114
-      Script: {instanceID: 2942}
+      Script: {instanceID: 2946}
     - Class: 114
-      Script: {instanceID: 3362}
+      Script: {instanceID: 3366}
     - Class: 114
-      Script: {instanceID: 3816}
+      Script: {instanceID: 3820}
     - Class: 114
-      Script: {instanceID: 3928}
+      Script: {instanceID: 3932}
     - Class: 114
-      Script: {instanceID: 4198}
+      Script: {instanceID: 4204}
     - Class: 114
-      Script: {instanceID: 4582}
+      Script: {instanceID: 4586}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -325,7 +340,7 @@ ScriptsOnlyBuild:
     className: AnimationPlayableAsset
   - hash:
       serializedVersion: 2
-      Hash: 25933d01c43c88d8e7492d8c463c8ea6
+      Hash: d5b10c85c7ff8e5e7c4809e777a069fc
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ArrowController
@@ -335,6 +350,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_InputField
+  - hash:
+      serializedVersion: 2
+      Hash: 32bb48e9e046729b22dbc01b1ee8b31c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GradingTracker
   - hash:
       serializedVersion: 2
       Hash: cfa93e0aa575524a6217c9a9f6511308
@@ -391,7 +412,7 @@ ScriptsOnlyBuild:
     className: Selectable
   - hash:
       serializedVersion: 2
-      Hash: a5171fcc823bb00faf1543f1ac04e584
+      Hash: b8bc0c1c13972d3343bbdb85f18dbe38
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CloseButtonController
@@ -427,7 +448,7 @@ ScriptsOnlyBuild:
     className: WarpTextExample
   - hash:
       serializedVersion: 2
-      Hash: 17312a16f6d18efae6704fb5d716d776
+      Hash: 58aef801c3ef9a769e2799c6802fe062
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GridScript
@@ -445,7 +466,7 @@ ScriptsOnlyBuild:
     className: SimpleScript
   - hash:
       serializedVersion: 2
-      Hash: 4316f85b3626eb921e4a8983943957d0
+      Hash: c7fc1d3c1f7d94b2fbf6946fb15e134e
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CanvasController
@@ -463,7 +484,7 @@ ScriptsOnlyBuild:
     className: TMP_DigitValidator
   - hash:
       serializedVersion: 2
-      Hash: 1218c3d042d8b095dc62e1050c088443
+      Hash: 6ac3f3e9b5ab85867a7f5a7d7e62a006
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UILineRenderer
@@ -511,7 +532,7 @@ ScriptsOnlyBuild:
     className: Benchmark02
   - hash:
       serializedVersion: 2
-      Hash: 969736060c74d7505049fd518d20cfb0
+      Hash: feb918d45ecf4f1c411ec60688f3b675
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: OverallTimerScript
@@ -533,6 +554,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: TMPro.Examples
     className: TextMeshSpawner
+  - hash:
+      serializedVersion: 2
+      Hash: b99a49055162078fb8d4a680ab1d83e1
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: AudioController
   - hash:
       serializedVersion: 2
       Hash: 27e5341178f188b89bdc6495710b590c
@@ -667,7 +694,7 @@ ScriptsOnlyBuild:
     className: BeforeAfterTestCommandState
   - hash:
       serializedVersion: 2
-      Hash: 678b29c27bd9d9b601f2dc1210812e01
+      Hash: 321545a330259f0c7f740dcae9e13e6c
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: PickUp
@@ -677,6 +704,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: ToggleGroup
+  - hash:
+      serializedVersion: 2
+      Hash: dafbcbd259c104a3a56e0ef1463dc71e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: GradingSystem
   - hash:
       serializedVersion: 2
       Hash: 69415240821be7986b27e72bf9609a30
@@ -751,7 +784,7 @@ ScriptsOnlyBuild:
     className: Outline
   - hash:
       serializedVersion: 2
-      Hash: adb827210b175832781ecd9e9fe6f04c
+      Hash: a9de030a4e909c620d4acf19b2a43ae5
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GraphPointScript
@@ -985,6 +1018,12 @@ ScriptsOnlyBuild:
     className: TMP_SubMeshUI
   - hash:
       serializedVersion: 2
+      Hash: e74d75d76da427265290a1d870983af9
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ToggleController
+  - hash:
+      serializedVersion: 2
       Hash: fe1fdeffc2067077b2f1a90b210c2532
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -1051,12 +1090,6 @@ ScriptsOnlyBuild:
     className: TextConsoleSimulator
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: WeightedCardScript
-  - hash:
-      serializedVersion: 2
       Hash: e63944317d2f5958e31963668bb29158
     assemblyName: Assembly-CSharp.dll
     namespaceName: TMPro.Examples
@@ -1069,13 +1102,13 @@ ScriptsOnlyBuild:
     className: ObjectSpin
   - hash:
       serializedVersion: 2
-      Hash: eabf2e75373a126fd7df2ebc38704c74
+      Hash: df0239b9657573e38756df64f4afe8a1
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GraphTitleScript
   - hash:
       serializedVersion: 2
-      Hash: fc2ddea76ab70af7a07cd2b9ef9e485b
+      Hash: 7d733e083f1684205a58985e47927e30
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GraphLabelScript
@@ -1133,12 +1166,6 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ToHoldRaycast
-  - hash:
-      serializedVersion: 2
-      Hash: 6c947054d654e84855fe03a8a9149ebe
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: GradingSystem
   platform: 19
   scenePathNames:
   - Assets/Scenes/Main_Menu_Scene.unity

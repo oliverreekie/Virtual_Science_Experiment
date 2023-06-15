@@ -4,58 +4,56 @@ using UnityEngine;
 
 public class CanvasController : MonoBehaviour
 {
+    //For each canvas, there is a reference to the canvas and a bool showing whether or not it is open
     public GameObject rulerCanvas;
-
     private bool rulerActive;
 
     public GameObject notesCanvas;
-
     private bool notesActive;
 
     public GameObject tableCanvas;
-
     private bool tableActive;
 
     public GameObject graphCanvas;
-
     private bool graphActive;
 
     public GameObject equationCanvas;
-
     private bool equationActive;
 
     public GameObject welcomeCanvas;
-
     private bool welcomeActive;
 
     public GameObject HUDCanvas;
-
     private bool HUDActive;
 
     public GameObject MenuCanvas;
-
     private bool MenuActive;
 
     public GameObject InfoCanvas;
-
     private bool InfoActive;
 
     public GameObject FinalCanvas;
-
     private bool FinalActive;
 
-    public GameObject graphOpenButton;
+    public GameObject SettingsCanvas;
+    private bool SettingsActive;
 
+    //Open buttons for the graph and table
+    public GameObject graphOpenButton;
     public GameObject tableOpenButton;
 
+    //Is the user drawing a line of best fit
     public bool isDrawing = false;
 
+    //Are the gradient lines showing
     public bool isShowingGradient = false;
 
+    //Reference to gradient lines
     public GameObject gradientLines;
 
     void Start()
     {
+        //Initially set all canvases except the welcome canvas to off
         rulerCanvas.SetActive(false);
         rulerActive = false;
 
@@ -86,40 +84,25 @@ public class CanvasController : MonoBehaviour
         FinalCanvas.SetActive(false);
         FinalActive = false;
 
+        SettingsCanvas.SetActive(false);
+        SettingsActive = false;
+
         gradientLines.SetActive(false);
     }
 
     private void Update()
     {
+        //Open and close notes when the user presses tab
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             swapNotesState();
         }
-/*        else if (Input.GetKeyDown(KeyCode.G))
-        {
-            swapGraphState();
-        }
-        else if (Input.GetKeyDown(KeyCode.E))
-        {
-            swapEquationState();
-        }
-        else if (Input.GetKeyDown(KeyCode.P))
-        {
-            swapWelcomeState();
-        }
-        else if (Input.GetKeyDown(KeyCode.I))
-        {
-            swapInfoState();
-        }*/
-        else if (Input.GetKeyDown(KeyCode.F))
-        {
-            swapFinalState();
-        }
+        //Open and close the menu when the user presses escape
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
             swapMenuState();
         }
-
+        //Functionality for graph close button
         if(graphCanvas.activeInHierarchy == true)
         {
             graphOpenButton.SetActive(false);
@@ -128,7 +111,7 @@ public class CanvasController : MonoBehaviour
         {
             graphOpenButton.SetActive(true);
         }
-
+        //Functionality for table close button
         if (tableCanvas.activeInHierarchy == true)
         {
             tableOpenButton.SetActive(false);
@@ -137,7 +120,7 @@ public class CanvasController : MonoBehaviour
         {
             tableOpenButton.SetActive(true);
         }
-
+        //Show gradient lines if required
         if(isShowingGradient == true)
         {
             gradientLines.SetActive(true);
@@ -147,6 +130,8 @@ public class CanvasController : MonoBehaviour
             gradientLines.SetActive(false);
         }
     }
+
+    //Functions to turn each canvas on and off when called
 
     public void swapGraphState()
     {
@@ -302,7 +287,23 @@ public class CanvasController : MonoBehaviour
             BuildState.Instance.setFinalCanvasOpen(false);
         }
     }
+    public void swapSettingsState()
+    {
+        if (SettingsActive == false)
+        {
+            SettingsCanvas.SetActive(true);
+            SettingsActive = true;
+            BuildState.Instance.setSettingsCanvasOpen(true);
+        }
+        else
+        {
+            SettingsCanvas.SetActive(false);
+            SettingsActive = false;
+            BuildState.Instance.setSettingsCanvasOpen(false);
+        }
+    }
 
+    //Getters for whether each canvas is open or not
     public bool getRulerActive()
     {
         return rulerActive;
@@ -342,5 +343,9 @@ public class CanvasController : MonoBehaviour
     public bool getFinalActive()
     {
         return FinalActive;
+    }
+    public bool getSettingsActive()
+    {
+        return SettingsActive;
     }
 }

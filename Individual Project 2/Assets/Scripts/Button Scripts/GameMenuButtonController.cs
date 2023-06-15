@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameMenuButtonController : MonoBehaviour
 {
@@ -14,31 +15,31 @@ public class GameMenuButtonController : MonoBehaviour
         btn.onClick.AddListener(TaskOnClick);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    //Called when the button is clicked
     void TaskOnClick()
     {
+        //Checks what button is pressed by accessing the button name
         if (this.name == "Continue")
         {
+            //Turns off the menu
             canvasController.swapMenuState();
         }
         else if (this.name == "Tutorial")
         {
+            //Begins tutorial again
             canvasController.swapWelcomeState();
             canvasController.swapMenuState();
             canvasController.swapHUDState();
         }
         else if (this.name == "Settings")
         {
-
+            //Opens setting screen
+            canvasController.swapSettingsState();
         }
         else if (this.name == "Quit Game")
         {
-            Application.Quit();
+            //Reloads the main menu scene
+            SceneManager.LoadScene(sceneName: "Main_Menu_Scene");
         }
     }
 }

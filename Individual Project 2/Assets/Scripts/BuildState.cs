@@ -5,50 +5,43 @@ using TMPro;
 
 public class BuildState : MonoBehaviour
 {
+    //Sets class as singleton
     public static BuildState Instance { get; private set; }
 
+    //Holds current state
     public string buildState = "Info";
 
+    //Refernce to each apparatus stage
     public GameObject clampStand;
-
     public GameObject clampStandLGOFF;
-
     public GameObject clampStandLGOFFRuler;
-
     public GameObject clampStandLGOFFRulerTimer;
-
     public GameObject buildCheck;
 
+    //Holds whether each canvas is open or closed
     private bool rulerCanvasOpen = false;
-
     private bool notesCanvasOpen = false;
-
     private bool tableCanvasOpen = false;
-
     private bool graphCanvasOpen = false;
-
     private bool equationCanvasOpen = false;
-
     private bool welcomeCanvasOpen = true;
-
     private bool HUDCanvasOpen = true;
-
     private bool MenuCanvasOpen = false;
-
     private bool InfoCanvasOpen = false;
-
     private bool FinalCanvasOpen = false;
+    private bool SettingsCanvasOpen = false;
 
+    //Instruction labels on HUD
     public TextMeshProUGUI currentGoalLabel;
-
     public TextMeshProUGUI mainGoalLabel;
 
+    //Holding the variables entered by the user on the info page
     public string independentVariable;
-
     public string dependentVariable;
 
     private void Awake()
     {
+        //Destroy secondary instances of class - for singleton implementation
         if(Instance == null)
         {
             Instance = this;
@@ -61,6 +54,7 @@ public class BuildState : MonoBehaviour
     }
     public void Update()
     {
+        //For each stage, display relevent instructions on HUD
         if(buildState == "Info")
         {
             mainGoalLabel.text = "Plan the Experiment";
@@ -79,6 +73,7 @@ public class BuildState : MonoBehaviour
         {
             currentGoalLabel.text = "Add the light gate";
         }
+        //If the user adds a new apparatus element, delete current state
         if (buildState == "ClampStand, LGOff")
         {
             Destroy(clampStand);
@@ -94,11 +89,6 @@ public class BuildState : MonoBehaviour
             Destroy(clampStandLGOFFRuler);
             currentGoalLabel.text = "Add the wires";
         }
-/*        if (buildState == "Ruler, Clamp, LGOFF, Timer, Wires")
-        {
-            Destroy(clampStandLGOFFRulerTimer);
-            Destroy(buildCheck);
-        }*/
         if (buildState == "Table")
         {
             Destroy(clampStandLGOFFRulerTimer);
@@ -123,6 +113,7 @@ public class BuildState : MonoBehaviour
         }
     }
 
+    //Getters and setters for each variable
     public void setBuildState(string s)
     {
         buildState = s;
@@ -227,5 +218,14 @@ public class BuildState : MonoBehaviour
     public bool getFinalCanvasOpen()
     {
         return FinalCanvasOpen;
+    }
+    public void setSettingsCanvasOpen(bool b)
+    {
+        SettingsCanvasOpen = b;
+    }
+
+    public bool getSettingsCanvasOpen()
+    {
+        return SettingsCanvasOpen;
     }
 }
